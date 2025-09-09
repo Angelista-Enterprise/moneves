@@ -117,7 +117,7 @@ function SignInForm() {
         {/* Logo and Title */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="h-12 w-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <div className="h-12 w-12 bg-gradient-to-br from-brand to-brand rounded-xl flex items-center justify-center">
               <DollarSign className="h-7 w-7 text-white" />
             </div>
             <h1 className="text-3xl font-bold">Claru</h1>
@@ -129,7 +129,7 @@ function SignInForm() {
         <Card className="group relative p-8 rounded-2xl overflow-hidden transition-all duration-300 border border-gray-800 bg-gray-900/50 hover:shadow-[0_4px_20px_rgba(255,255,255,0.05)] hover:-translate-y-0.5 will-change-transform">
           {/* AI-Generated Background Pattern */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-cyan-500/10" />
+            <div className="absolute inset-0 bg-gradient-to-br from-brand/10 via-brand/5 to-cyan-500/10" />
             <div
               className="absolute inset-0 bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,rgba(59,130,246,0.1)_60deg,transparent_120deg,rgba(147,51,234,0.1)_180deg,transparent_240deg,rgba(6,182,212,0.1)_300deg,transparent_360deg)] animate-spin"
               style={{ animationDuration: "20s" }}
@@ -213,7 +213,7 @@ function SignInForm() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-brand-gradient hover:opacity-95 text-white font-medium py-2.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">

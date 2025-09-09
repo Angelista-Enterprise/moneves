@@ -28,7 +28,7 @@ export const PageHeader = ({
       <div className="max-w-7xl mx-auto py-6 md:px-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="h-10 w-10 bg-gradient-to-br from-brand to-brand rounded-lg flex items-center justify-center">
               {icon}
             </div>
             <div>

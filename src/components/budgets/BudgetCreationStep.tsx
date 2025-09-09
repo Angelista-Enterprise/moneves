@@ -143,7 +143,7 @@ export const BudgetCreationStep = ({
       {/* Header */}
       <div className="text-center">
         <AnimationWrapper animation="fadeIn" delay={200}>
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-gradient-to-br from-brand to-brand rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Target className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl font-bold mb-4">Create Budget Categories</h2>
@@ -220,8 +220,8 @@ export const BudgetCreationStep = ({
         </AnimationWrapper>
       ) : (
         <AnimationWrapper animation="fadeIn" delay={400}>
-          <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl border border-blue-500/20 p-8 text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="bg-gradient-to-br from-brand/10 to-brand/10 rounded-xl border border-blue-500/20 p-8 text-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-brand to-brand rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Target className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-xl font-semibold text-blue-400 mb-2">
@@ -231,10 +231,7 @@ export const BudgetCreationStep = ({
               Create your first budget category to start tracking your spending
               and achieve your financial goals.
             </p>
-            <button
-              onClick={() => setShowForm(true)}
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 mx-auto shadow-lg hover:shadow-xl"
-            >
+            <button onClick={() => setShowForm(true)} className="px-6 py-3 bg-gradient-to-r from-brand to-brand rounded-lg text-white hover:opacity-95 transition-all duration-300 flex items-center gap-2 mx-auto shadow-lg hover:shadow-xl">
               <Plus className="w-4 h-4" />
               Create Your First Category
             </button>
@@ -247,14 +244,7 @@ export const BudgetCreationStep = ({
         <div className="bg-gray-900/50 rounded-xl border border-gray-800 p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold">Create New Budget Category</h3>
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className={`px-6 py-3 rounded-lg transition-all duration-200 flex items-center gap-2 ${
-                showForm
-                  ? "bg-gray-600 text-white hover:bg-gray-700"
-                  : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl"
-              }`}
-            >
+            <button onClick={() => setShowForm(!showForm)} className={`px-6 py-3 rounded-lg transition-all duration-200 flex items-center gap-2 ${showForm ? "bg-gray-600 text-white hover:bg-gray-700" : "bg-gradient-to-r from-brand to-brand text-white hover:opacity-95 shadow-lg hover:shadow-xl"}`}>
               <Plus className="w-4 h-4" />
               {showForm ? "Cancel" : "Add New Category"}
             </button>
@@ -468,10 +458,7 @@ export const BudgetCreationStep = ({
       {budgets.length > 0 && (
         <AnimationWrapper animation="fadeIn" delay={800}>
           <div className="text-center">
-            <button
-              onClick={onNext}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 mx-auto"
-            >
+            <button onClick={onNext} className="px-8 py-3 bg-gradient-to-r from-brand to-brand rounded-lg text-white hover:opacity-95 transition-all duration-300 flex items-center gap-2 mx-auto">
               Continue to Categorization
               <CheckCircle className="w-5 h-5" />
             </button>

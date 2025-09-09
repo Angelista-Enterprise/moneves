@@ -105,7 +105,7 @@ export const BentoGrid = ({
             {item.value !== undefined && item.maxValue !== undefined && (
               <div className="w-full bg-gray-700 rounded-full h-2">
                 <div
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500 group-hover:from-blue-400 group-hover:to-purple-400"
+                  className="bg-gradient-to-r from-brand to-brand h-2 rounded-full transition-all duration-500"
                   style={{
                     width: `${Math.min(
                       (item.value / item.maxValue) * 100,

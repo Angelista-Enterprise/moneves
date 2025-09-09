@@ -125,10 +125,7 @@ export default function SignUpPage() {
               continue...
             </p>
             <div className="w-full bg-gray-700 rounded-full h-2">
-              <div
-                className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full animate-pulse"
-                style={{ width: "100%" }}
-              ></div>
+              <div className="bg-gradient-to-r from-brand to-brand h-2 rounded-full animate-pulse" style={{ width: "100%" }}></div>
             </div>
           </div>
 
@@ -147,7 +144,7 @@ export default function SignUpPage() {
         {/* Logo and Title */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="h-12 w-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <div className="h-12 w-12 bg-gradient-to-br from-brand to-brand rounded-xl flex items-center justify-center">
               <DollarSign className="h-7 w-7 text-white" />
             </div>
             <h1 className="text-3xl font-bold">Claru</h1>
@@ -290,11 +287,7 @@ export default function SignUpPage() {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <Button type="submit" disabled={isLoading} className="w-full bg-brand-gradient hover:opacity-95 text-white font-medium py-2.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                 {isLoading ? (
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

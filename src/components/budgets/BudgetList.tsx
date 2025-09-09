@@ -109,9 +109,9 @@ export const BudgetList = ({
       case 2:
         return "from-orange-500 via-amber-500 to-yellow-500";
       case 3:
-        return "from-indigo-500 via-purple-500 to-pink-500";
+        return "from-brand via-purple-500 to-pink-500";
       case 4:
-        return "from-sky-500 via-blue-500 to-indigo-600";
+        return "from-sky-500 via-blue-500 to-brand";
       case 5:
         return "from-emerald-500 via-teal-500 to-cyan-500";
       default:
@@ -228,10 +228,10 @@ export const BudgetList = ({
             <div
               className={`h-2 rounded-full transition-all duration-500 ${
                 isOverBudget
-                  ? "bg-gradient-to-r from-red-500 to-red-600"
+                  ? "bg-gradient-to-r from-rose-500 to-rose-600"
                   : isNearLimit
-                  ? "bg-gradient-to-r from-yellow-500 to-orange-500"
-                  : "bg-gradient-to-r from-green-500 to-blue-500"
+                  ? "bg-gradient-to-r from-amber-500 to-amber-600"
+                  : "bg-gradient-to-r from-emerald-500 to-brand"
               }`}
               style={{ width: `${Math.min(utilizationRate * 100, 100)}%` }}
             />
@@ -309,7 +309,7 @@ export const BudgetList = ({
         </div>
 
         {/* Hover Overlay */}
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand/5 to-brand/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       </div>
     );
   };

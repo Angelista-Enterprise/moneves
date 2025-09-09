@@ -82,7 +82,7 @@ export function NavigationButton({
     >
       <div className="flex items-center gap-3">
         {icon && (
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand to-brand flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300">
             {icon}
           </div>
         )}
@@ -94,7 +94,7 @@ export function NavigationButton({
       </div>
 
       {/* Hover effect overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+      <div className="absolute inset-0 bg-gradient-to-r from-brand/10 to-brand/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
 
       {/* Navigation arrow */}
       <div className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1">
