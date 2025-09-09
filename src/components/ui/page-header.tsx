@@ -39,7 +39,7 @@ export const PageHeader = ({
 
           <div className="flex items-center gap-4">
             {onToggleBalance && (
-              <Button onClick={onToggleBalance} size="sm">
+              <Button onClick={onToggleBalance} size="sm" variant="ghost-blue">
                 {showBalance ? <Eye size={16} /> : <EyeOff size={16} />}
                 {showBalance ? "Hide" : "Show"} Balance
               </Button>

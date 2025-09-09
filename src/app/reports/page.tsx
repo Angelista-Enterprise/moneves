@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { NavigationDock } from "@/components/navigation-dock";
+import { Button } from "@/components/ui/button";
 import {
   useBudgetCategories,
   useUnifiedTransactions,
   useBunqApiKey,
   useSavingsGoals,
+  useShowBalance,
 } from "@/hooks";
 import { BunqTransactionResponse } from "@/types/bunq/transactions";
 import {
@@ -34,7 +36,7 @@ export default function ReportsPage() {
 
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [showBalance, setShowBalance] = useState(true);
+  const { showBalance, toggleBalance } = useShowBalance();
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [showBudgetForm, setShowBudgetForm] = useState(false);
@@ -119,20 +121,21 @@ export default function ReportsPage() {
         description="Comprehensive financial overview, category analysis, and trends"
         icon={<BarChart3 className="h-6 w-6 text-white" />}
         showBalance={showBalance}
-        onToggleBalance={() => setShowBalance(!showBalance)}
+        onToggleBalance={toggleBalance}
         rightActions={
           <div className="flex gap-2">
-            <button
+            <Button
+              size="sm"
+              variant="ghost-blue"
               onClick={() => setShowAddTransaction(true)}
-              className="px-3 py-2 bg-blue-600/20 border border-blue-500/30 rounded-lg text-blue-300 hover:bg-blue-600/30 transition-all duration-300 hover:scale-105 flex items-center gap-2 text-sm"
             >
               <Plus size={16} />
               Add Transaction
-            </button>
-            <button className="px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white hover:bg-gray-700/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 text-sm">
+            </Button>
+            <Button size="sm" variant="ghost-purple">
               <Target size={16} />
               Export Report
-            </button>
+            </Button>
           </div>
         }
       />

@@ -46,6 +46,7 @@ interface SmartRecommendationsProps {
   onApplyRecommendation: (recommendation: Recommendation) => void;
   onNavigateToSavings?: () => void;
   onNavigateToCategorize?: () => void;
+  showBalance?: boolean;
 }
 
 export const SmartRecommendations = ({
@@ -54,6 +55,7 @@ export const SmartRecommendations = ({
   onApplyRecommendation,
   onNavigateToSavings,
   onNavigateToCategorize,
+  showBalance = true,
 }: SmartRecommendationsProps) => {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [filter, setFilter] = useState<
@@ -104,9 +106,9 @@ export const SmartRecommendations = ({
           title: "Savings Opportunity",
           description: `You're ${Math.round(
             utilizationRate * 100
-          )}% under budget for ${
-            budget.name
-          }. You could save ${potentialSavings.toFixed(0)}€ this month.`,
+          )}% under budget for ${budget.name}. You could save ${
+            showBalance ? `${potentialSavings.toFixed(0)}€` : "••••••"
+          } this month.`,
           impact: "medium",
           effort: "low",
           potentialSavings,
@@ -125,9 +127,11 @@ export const SmartRecommendations = ({
           title: "Budget Optimization",
           description: `At current pace, you'll exceed ${
             budget.name
-          } budget by ${(projectedSpending - budget.monthlyLimit).toFixed(
-            0
-          )}€. Consider adjusting your spending pattern.`,
+          } budget by ${
+            showBalance
+              ? `${(projectedSpending - budget.monthlyLimit).toFixed(0)}€`
+              : "••••••"
+          }. Consider adjusting your spending pattern.`,
           impact: "high",
           effort: "medium",
           category: budget.name,
@@ -143,7 +147,9 @@ export const SmartRecommendations = ({
           id: `goal_${budget.id}`,
           type: "goal",
           title: "Set Savings Goal",
-          description: `You have ${budget.remaining.toFixed(0)}€ remaining in ${
+          description: `You have ${
+            showBalance ? `${budget.remaining.toFixed(0)}€` : "••••••"
+          } remaining in ${
             budget.name
           }. Consider setting a savings goal to maximize your potential.`,
           impact: "medium",
@@ -199,7 +205,7 @@ export const SmartRecommendations = ({
     }
 
     setRecommendations(recs);
-  }, [budgets, transactions]);
+  }, [budgets, transactions, showBalance]);
 
   useEffect(() => {
     generateRecommendations();
@@ -337,8 +343,10 @@ export const SmartRecommendations = ({
                         <div className="flex items-center gap-2">
                           <DollarSign className="w-4 h-4 text-green-400" />
                           <span className="text-sm font-medium text-green-400">
-                            Potential Savings: {rec.potentialSavings.toFixed(0)}
-                            €
+                            Potential Savings:{" "}
+                            {showBalance
+                              ? `${rec.potentialSavings.toFixed(0)}€`
+                              : "••••••"}
                           </span>
                         </div>
                       </div>

@@ -203,7 +203,7 @@ export const BudgetList = ({
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-400">Progress</span>
             <span className="text-sm font-medium text-white">
-              {Math.round(utilizationRate * 100)}%
+              {showBalance ? `${Math.round(utilizationRate * 100)}%` : "••••••"}
             </span>
           </div>
           <div className="w-full bg-gray-800 rounded-full h-2">

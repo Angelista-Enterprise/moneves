@@ -3,6 +3,7 @@ import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import * as bcrypt from "bcryptjs";
 import { selectOneEncrypted, insertEncrypted } from "@/lib/db/encrypted-db";
+import { randomUUID } from "crypto";
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     // Create user
     const newUser = await insertEncrypted(users, "users", {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       name,
       email,
       password: hashedPassword,

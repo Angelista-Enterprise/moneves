@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { NavigationDock } from "@/components/navigation-dock";
+import { Button } from "@/components/ui/button";
 import {
   useBunqAccounts,
   useBunqApiKey,
   useSavingsGoals,
   useUnifiedTransactions,
   useBudgetCategories,
+  useShowBalance,
 } from "@/hooks";
 import {
   AnimationWrapper,
@@ -72,7 +74,7 @@ interface BunqAccount {
 export default function SavingsGoalsPage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
-  const [showBalance, setShowBalance] = useState(true);
+  const { showBalance, toggleBalance } = useShowBalance();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingGoal, setEditingGoal] = useState<SavingsGoalWithAccount | null>(
     null
@@ -272,23 +274,25 @@ export default function SavingsGoalsPage() {
         description="Track and manage your financial goals"
         icon={<PiggyBank className="w-6 h-6 text-white" />}
         showBalance={showBalance}
-        onToggleBalance={() => setShowBalance(!showBalance)}
+        onToggleBalance={toggleBalance}
         rightActions={
           <div className="flex gap-2">
-            <button
+            <Button
+              size="sm"
+              variant="ghost-blue"
               onClick={() => setShowAddTransaction(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200"
             >
               <Plus className="w-4 h-4" />
               Add Transaction
-            </button>
-            <button
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost-green"
               onClick={() => setShowCreateForm(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200"
             >
               <Plus className="w-4 h-4" />
               New Goal
-            </button>
+            </Button>
           </div>
         }
       />
@@ -360,7 +364,7 @@ export default function SavingsGoalsPage() {
                 <h3 className="text-lg font-semibold">Progress</h3>
               </div>
               <p className="text-3xl font-bold text-white mb-2">
-                {Math.round(overallProgress)}%
+                {showBalance ? `${Math.round(overallProgress)}%` : "••••••"}
               </p>
               <div className="w-full bg-gray-800 rounded-full h-2 mt-2">
                 <div
@@ -486,7 +490,9 @@ export default function SavingsGoalsPage() {
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-sm text-gray-400">Progress</span>
                         <span className="text-sm font-medium text-white">
-                          {Math.round(goal.progress)}%
+                          {showBalance
+                            ? `${Math.round(goal.progress)}%`
+                            : "••••••"}
                         </span>
                       </div>
                       <div className="w-full bg-gray-800 rounded-full h-2">

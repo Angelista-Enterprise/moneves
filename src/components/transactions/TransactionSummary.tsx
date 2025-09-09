@@ -92,7 +92,7 @@ export const TransactionSummary = ({
               amount={metrics.transactionCount.toString()}
               change={metrics.transactionCountChange}
               icon={<CreditCard className="w-4 h-4 text-purple-500" />}
-              showBalance={true}
+              showBalance={showBalance}
             />
           </StaggeredContainer>
         )}

@@ -6,9 +6,14 @@ import { AnimationWrapper, StaggeredContainer } from "@/components/ui";
 interface BentoGridProps {
   items: BentoItem[];
   isLoading?: boolean;
+  showBalance?: boolean;
 }
 
-export const BentoGrid = ({ items, isLoading = false }: BentoGridProps) => {
+export const BentoGrid = ({
+  items,
+  isLoading = false,
+  showBalance = true,
+}: BentoGridProps) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -66,8 +71,14 @@ export const BentoGrid = ({ items, isLoading = false }: BentoGridProps) => {
                   }`}
                 >
                   <span>
-                    {item.change >= 0 ? "+" : ""}
-                    {item.change}%
+                    {showBalance ? (
+                      <>
+                        {item.change >= 0 ? "+" : ""}
+                        {item.change}%
+                      </>
+                    ) : (
+                      "••••••"
+                    )}
                   </span>
                 </div>
               )}

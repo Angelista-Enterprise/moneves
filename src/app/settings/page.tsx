@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { NavigationDock } from "@/components/navigation-dock";
-import { useUserSettings } from "@/hooks";
+import { useUserSettings, useShowBalance } from "@/hooks";
 import { useSettingsValidation } from "@/hooks/useSettingsValidation";
 import { PageHeader } from "@/components/ui";
 import { useDataExport } from "@/lib/data-export";
@@ -60,6 +60,16 @@ const types = {
   error:
     "bg-[#ea001d] dark:bg-[#e2162a] hover:bg-[#ae292f] dark:hover:bg-[#ff565f] text-[#f5f5f5] dark:text-white fill-[#f5f5f5] dark:fill-white",
   warning: "bg-[#ff9300] hover:bg-[#d27504] text-[#0a0a0a] fill-[#0a0a0a]",
+  "ghost-blue":
+    "bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-200",
+  "ghost-green":
+    "bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20 hover:text-green-300 transition-all duration-200",
+  "ghost-purple":
+    "bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200",
+  "ghost-orange":
+    "bg-orange-500/10 text-orange-400 border border-orange-500/20 hover:bg-orange-500/20 hover:text-orange-300 transition-all duration-200",
+  "ghost-pink":
+    "bg-pink-500/10 text-pink-400 border border-pink-500/20 hover:bg-pink-500/20 hover:text-pink-300 transition-all duration-200",
 };
 
 const shapes = {
@@ -164,6 +174,7 @@ interface SettingsCardProps {
   icon: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 }
 
 const SettingsCard = ({
@@ -172,11 +183,13 @@ const SettingsCard = ({
   icon,
   children,
   className,
+  disabled = false,
 }: SettingsCardProps) => {
   return (
     <div
       className={cn(
         "group relative p-6 rounded-xl overflow-hidden transition-all duration-300 border border-gray-800 bg-gray-900/50 hover:shadow-[0_4px_20px_rgba(255,255,255,0.05)] hover:-translate-y-0.5 will-change-transform",
+        disabled && "opacity-50 cursor-not-allowed",
         className
       )}
     >
@@ -195,7 +208,7 @@ const SettingsCard = ({
             <p className="text-sm text-gray-400">{description}</p>
           </div>
         </div>
-        {children}
+        <div className={cn(disabled && "pointer-events-none")}>{children}</div>
       </div>
     </div>
   );
@@ -412,7 +425,7 @@ export default function SettingsPage() {
   const { validationState, validateField, validateAll, hasErrors, errorCount } =
     useSettingsValidation();
 
-  const [showBalance, setShowBalance] = useState(true);
+  const { showBalance, toggleBalance } = useShowBalance();
   const [isLoading, setIsLoading] = useState(false);
   const [saveStatus, setSaveStatus] = useState<
     "idle" | "saving" | "saved" | "error"
@@ -768,7 +781,7 @@ export default function SettingsPage() {
         description="Manage your account preferences and application settings"
         icon={<SettingsIcon className="h-6 w-6 text-white" />}
         showBalance={showBalance}
-        onToggleBalance={() => setShowBalance(!showBalance)}
+        onToggleBalance={toggleBalance}
         rightActions={
           <div className="flex items-center gap-3">
             {hasErrors && (
@@ -778,7 +791,7 @@ export default function SettingsPage() {
               </div>
             )}
             <Button
-              variant="primary"
+              variant="ghost-green"
               size="medium"
               onClick={handleSave}
               loading={isLoading}
@@ -864,6 +877,7 @@ export default function SettingsPage() {
               title="Notifications"
               description="Control when and how you receive notifications"
               icon={<Bell className="w-4 h-4 text-green-500" />}
+              disabled
             >
               <div className="space-y-4">
                 <Toggle
@@ -909,6 +923,7 @@ export default function SettingsPage() {
               title="Privacy & Data"
               description="Control your data sharing and privacy preferences"
               icon={<Shield className="w-4 h-4 text-purple-500" />}
+              disabled
             >
               <div className="space-y-4">
                 <Toggle
@@ -999,6 +1014,7 @@ export default function SettingsPage() {
               title="Bunq API Integration"
               description="Configure your Bunq API connection for real-time data"
               icon={<CreditCard className="w-4 h-4 text-orange-500" />}
+              disabled
             >
               <div className="space-y-4">
                 <FormInput
@@ -1087,6 +1103,7 @@ export default function SettingsPage() {
               title="Subscription"
               description="Manage your subscription and billing information"
               icon={<DollarSign className="w-4 h-4 text-yellow-500" />}
+              disabled
             >
               <div className="space-y-4">
                 <Select
@@ -1094,7 +1111,6 @@ export default function SettingsPage() {
                   value={subscriptionTier}
                   onChange={setSubscriptionTier}
                   options={subscriptionTierOptions}
-                  disabled
                   helpText="Contact support to change your subscription tier"
                 />
                 <div className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
@@ -1122,6 +1138,7 @@ export default function SettingsPage() {
               title="System Information"
               description="Application version and system details"
               icon={<Server className="w-4 h-4 text-gray-500" />}
+              disabled
             >
               <div className="space-y-4">
                 {systemInfo ? (

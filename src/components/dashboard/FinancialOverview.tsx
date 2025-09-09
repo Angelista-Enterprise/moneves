@@ -75,7 +75,9 @@ export const FinancialOverview = ({
                         }`}
                       >
                         <ChangeIcon size={16} />
-                        <span>{item.change}%</span>
+                        <span>
+                          {showBalance ? `${item.change}%` : "••••••"}
+                        </span>
                       </div>
                     </div>
                     <div className="space-y-2">

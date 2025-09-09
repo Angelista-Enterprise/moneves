@@ -149,7 +149,7 @@ export const FinancialOverview = ({
       title: "Budget Utilization",
       description: "Average budget usage across categories",
       icon: <TrendingUp className="w-4 h-4 text-purple-500" />,
-      amount: `${averageUtilization}%`,
+      amount: showBalance ? `${averageUtilization}%` : "••••••",
       tags: ["Budget", "Average"],
       status:
         averageUtilization > 80
@@ -175,7 +175,7 @@ export const FinancialOverview = ({
       amount: topCategory.name,
       meta: showBalance ? formatCurrency(topCategory.spent) : "••••••",
       tags: ["Top", "Category"],
-      status: `${topCategory.percentage}%`,
+      status: showBalance ? `${topCategory.percentage}%` : "••••••",
       colSpan: 1,
     },
   ];
@@ -186,7 +186,11 @@ export const FinancialOverview = ({
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Financial Overview</h2>
         </div>
-        <BentoGrid items={overviewItems} isLoading={isLoading} />
+g        <BentoGrid
+          items={overviewItems}
+          isLoading={isLoading}
+          showBalance={showBalance}
+        />
       </div>
     </AnimationWrapper>
   );

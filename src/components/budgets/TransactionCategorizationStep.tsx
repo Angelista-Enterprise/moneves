@@ -17,12 +17,14 @@ interface TransactionCategorizationStepProps {
     color: string | null;
   }>;
   onNext: () => void;
+  showBalance?: boolean;
 }
 
 export const TransactionCategorizationStep = ({
   transactions,
   budgets,
   onNext,
+  showBalance = true,
 }: TransactionCategorizationStepProps) => {
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
@@ -423,7 +425,7 @@ export const TransactionCategorizationStep = ({
                               isIncome ? "text-green-400" : "text-red-400"
                             }`}
                           >
-                            {formatCurrency(amount)}
+                            {showBalance ? formatCurrency(amount) : "••••••"}
                           </p>
                           <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-200">
                             {isIncome ? "Income" : "Expense"}

@@ -15,6 +15,7 @@ import {
   useBunqApiKey,
   useBudgetCategories,
   useSavingsGoals,
+  useShowBalance,
 } from "@/hooks";
 import { Button, PageHeader } from "@/components/ui";
 import { AddTransactionForm } from "@/components/transactions";
@@ -28,7 +29,7 @@ const DashboardContent = () => {
 
   const { apiKey: bunqApiKey } = useBunqApiKey(userId || "");
 
-  const [showBalance, setShowBalance] = useState(true);
+  const { showBalance, toggleBalance } = useShowBalance();
   const [showAddTransaction, setShowAddTransaction] = useState(false);
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
 
@@ -103,10 +104,14 @@ const DashboardContent = () => {
         description="Track your finances and reach your goals"
         icon={<DollarSign className="h-6 w-6 text-white" />}
         showBalance={showBalance}
-        onToggleBalance={() => setShowBalance(!showBalance)}
+        onToggleBalance={toggleBalance}
         rightActions={
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={() => setShowAddTransaction(true)}>
+            <Button
+              size="sm"
+              variant="ghost-blue"
+              onClick={() => setShowAddTransaction(true)}
+            >
               <Plus size={16} />
               Add Transaction
             </Button>

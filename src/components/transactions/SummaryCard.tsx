@@ -33,7 +33,7 @@ export const SummaryCard = ({
             ) : (
               <ArrowDownRight size={16} />
             )}
-            <span>{Math.abs(change)}%</span>
+            <span>{showBalance ? `${Math.abs(change)}%` : "••••••"}</span>
           </div>
         </div>
         <div className="space-y-2">

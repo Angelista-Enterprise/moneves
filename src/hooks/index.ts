@@ -33,3 +33,4 @@ export {
   transactionsQueryKeys,
 } from "./useTransactions";
 export { useUnifiedTransactions } from "./useUnifiedTransactions";
+export { useShowBalance } from "./useShowBalance";

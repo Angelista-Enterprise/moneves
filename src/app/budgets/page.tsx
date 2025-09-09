@@ -9,8 +9,10 @@ import {
   useBunqApiKey,
   useBudgetCategories,
   useSavingsGoals,
+  useShowBalance,
 } from "@/hooks";
 import { AnimationWrapper, PageHeader } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { AddTransactionForm } from "@/components/transactions";
 import {
   BudgetCreationStep,
@@ -37,7 +39,7 @@ export default function BudgetsPage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const [currentStep, setCurrentStep] = useState<Step>("overview");
-  const [showBalance, setShowBalance] = useState(true);
+  const { showBalance, toggleBalance } = useShowBalance();
   const [showAddTransaction, setShowAddTransaction] = useState(false);
   // const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
 
@@ -123,6 +125,7 @@ export default function BudgetsPage() {
               formatCurrency={formatCurrency}
               onNavigateToCreate={() => setCurrentStep("create")}
               onNavigateToCategorize={() => setCurrentStep("categorize")}
+              showBalance={showBalance}
             />
 
             {/* Smart Recommendations */}
@@ -139,6 +142,7 @@ export default function BudgetsPage() {
               onNavigateToCategorize={() => {
                 setCurrentStep("categorize");
               }}
+              showBalance={showBalance}
             />
 
             {/* Budget List */}
@@ -152,7 +156,7 @@ export default function BudgetsPage() {
               onCreate={() => setCurrentStep("create")}
               onDelete={handleDeleteBudget}
               showBalance={showBalance}
-              onToggleBalance={() => setShowBalance(!showBalance)}
+              onToggleBalance={toggleBalance}
             />
           </div>
         );
@@ -173,10 +177,17 @@ export default function BudgetsPage() {
             transactions={allTransactions}
             budgets={budgets}
             onNext={() => setCurrentStep("review")}
+            showBalance={showBalance}
           />
         );
       case "review":
-        return <ReviewStep budgets={budgets} formatCurrency={formatCurrency} />;
+        return (
+          <ReviewStep
+            budgets={budgets}
+            formatCurrency={formatCurrency}
+            showBalance={showBalance}
+          />
+        );
       default:
         return (
           <OverviewStep
@@ -184,6 +195,7 @@ export default function BudgetsPage() {
             formatCurrency={formatCurrency}
             onNavigateToCreate={() => setCurrentStep("create")}
             onNavigateToCategorize={() => setCurrentStep("categorize")}
+            showBalance={showBalance}
           />
         );
     }
@@ -196,15 +208,18 @@ export default function BudgetsPage() {
         title="Budget Management"
         description="Create and manage your budget categories"
         icon={<Target className="w-6 h-6 text-white" />}
+        showBalance={showBalance}
+        onToggleBalance={toggleBalance}
         rightActions={
           <div className="flex gap-2 items-center">
-            <button
+            <Button
+              size="sm"
+              variant="ghost-blue"
               onClick={() => setShowAddTransaction(true)}
-              className="px-3 py-2 bg-blue-600/20 border border-blue-500/30 rounded-lg text-blue-300 hover:bg-blue-600/30 transition-all duration-300 hover:scale-105 flex items-center gap-2 text-sm"
             >
               <Plus size={16} />
               Add Transaction
-            </button>
+            </Button>
             <div className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full">
               <span className="text-blue-400 text-sm font-medium">
                 {budgets.length} Categories
@@ -324,6 +339,7 @@ function OverviewStep({
   formatCurrency,
   onNavigateToCreate,
   onNavigateToCategorize,
+  showBalance,
 }: {
   budgets: Array<{
     id: number;
@@ -334,6 +350,7 @@ function OverviewStep({
   formatCurrency: (amount: number) => string;
   onNavigateToCreate: () => void;
   onNavigateToCategorize: () => void;
+  showBalance: boolean;
 }) {
   const totalBudget = budgets.reduce(
     (sum, budget) => sum + budget.monthlyLimit,
@@ -351,13 +368,13 @@ function OverviewStep({
             <div className="flex justify-between">
               <span className="text-gray-400">Total Budget</span>
               <span className="font-semibold">
-                {formatCurrency(totalBudget)}
+                {showBalance ? formatCurrency(totalBudget) : "••••••"}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Total Spent</span>
               <span className="font-semibold">
-                {formatCurrency(totalSpent)}
+                {showBalance ? formatCurrency(totalSpent) : "••••••"}
               </span>
             </div>
             <div className="flex justify-between">
@@ -371,7 +388,7 @@ function OverviewStep({
                     : "text-green-400"
                 }`}
               >
-                {utilization.toFixed(1)}%
+                {showBalance ? `${utilization.toFixed(1)}%` : "••••••"}
               </span>
             </div>
           </div>
@@ -392,7 +409,7 @@ function OverviewStep({
                 >
                   <span className="text-sm text-gray-300">{budget.name}</span>
                   <span className="text-sm font-medium">
-                    {formatCurrency(budget.spent)}
+                    {showBalance ? formatCurrency(budget.spent) : "••••••"}
                   </span>
                 </div>
               ))
@@ -427,6 +444,7 @@ function OverviewStep({
 function ReviewStep({
   budgets,
   formatCurrency,
+  showBalance,
 }: {
   budgets: Array<{
     id: number;
@@ -435,6 +453,7 @@ function ReviewStep({
     spent: number;
   }>;
   formatCurrency: (amount: number) => string;
+  showBalance: boolean;
 }) {
   return (
     <div className="text-center py-12">
@@ -455,7 +474,11 @@ function ReviewStep({
             <div className="flex items-center justify-between mb-2">
               <span className="font-medium">{budget.name}</span>
               <span className="text-sm text-gray-400">
-                {((budget.spent / budget.monthlyLimit) * 100).toFixed(1)}%
+                {showBalance
+                  ? `${((budget.spent / budget.monthlyLimit) * 100).toFixed(
+                      1
+                    )}%`
+                  : "••••••"}
               </span>
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
@@ -470,8 +493,12 @@ function ReviewStep({
               />
             </div>
             <div className="flex justify-between text-sm text-gray-400">
-              <span>{formatCurrency(budget.spent)}</span>
-              <span>{formatCurrency(budget.monthlyLimit)}</span>
+              <span>
+                {showBalance ? formatCurrency(budget.spent) : "••••••"}
+              </span>
+              <span>
+                {showBalance ? formatCurrency(budget.monthlyLimit) : "••••••"}
+              </span>
             </div>
           </div>
         ))}

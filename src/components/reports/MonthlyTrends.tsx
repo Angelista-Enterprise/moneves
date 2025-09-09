@@ -119,7 +119,7 @@ export const MonthlyTrends = ({
                               : "text-gray-500"
                           }`}
                         >
-                          {savingsRate}%
+                          {showBalance ? `${savingsRate}%` : "••••••"}
                         </p>
                       </div>
                     </div>

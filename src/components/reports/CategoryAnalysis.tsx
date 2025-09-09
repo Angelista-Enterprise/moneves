@@ -39,7 +39,7 @@ export const CategoryAnalysis = ({
         category.percentage >= 100 ? "Over Budget" : "On Track",
         `${category.transactionCount} txns`,
       ],
-      status: `${category.percentage}%`,
+      status: showBalance ? `${category.percentage}%` : "••••••",
       colSpan: 1,
     })
   );
