@@ -109,13 +109,9 @@ const DashboardContent = () => {
         onToggleBalance={toggleBalance}
         rightActions={
           <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              variant="ghost-blue"
-              onClick={() => setShowAddTransaction(true)}
-            >
+            <Button size="sm" variant="ghost-blue" onClick={() => setShowAddTransaction(true)}>
               <Plus size={16} />
-              Add Transaction
+              Add transaction
             </Button>
           </div>
         }

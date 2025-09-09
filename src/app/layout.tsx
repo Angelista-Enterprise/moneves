@@ -23,6 +23,7 @@ export default function RootLayout({
           <main className="min-h-screen bg-background">{children}</main>
           <FloatingBugButton />
         </Providers>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </body>
     </html>
   );

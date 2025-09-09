@@ -266,7 +266,7 @@ function SignInForm() {
                           void performSignIn(testUser.email, testUser.password);
                         }}
                       >
-                        Autofill and Sign In
+                        Autofill and sign in
                       </Button>
                     </div>
                   </div>

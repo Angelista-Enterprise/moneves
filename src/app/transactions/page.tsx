@@ -171,9 +171,7 @@ export default function TransactionsPage() {
         {hasTransactionsError && (
           <AnimationWrapper animation="fadeIn" delay={200}>
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <p className="text-red-400 text-sm">
-                Error: Unable to load transactions. Please try again later.
-              </p>
+              <p className="text-red-400 text-sm">We couldn’t load transactions. Check your Bunq token or try again.</p>
             </div>
           </AnimationWrapper>
         )}
@@ -244,20 +242,18 @@ export default function TransactionsPage() {
               <div className="w-16 h-16 mx-auto mb-4 bg-gray-800/50 rounded-full flex items-center justify-center">
                 <CreditCard className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-300 mb-2">
-                No Transactions Found
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-300 mb-2">No transactions yet</h3>
               <p className="text-gray-400 mb-6">
                 {bunqApiKey
-                  ? "Unable to load transactions from Bunq API. Please check your API token or try again later."
-                  : "Please configure your Bunq API token in settings to view transactions."}
+                  ? "Connect your account or add a manual transaction to get started."
+                  : "Add your Bunq API token in Settings to sync transactions, or add one manually."}
               </p>
               <Button
                 onClick={() => setShowAddTransaction(true)}
                 className="bg-blue-600 hover:bg-blue-700"
               >
                 <Plus size={16} className="mr-2" />
-                Add Manual Transaction
+                Add transaction
               </Button>
             </div>
           </AnimationWrapper>

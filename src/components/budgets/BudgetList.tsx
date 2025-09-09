@@ -339,12 +339,9 @@ export const BudgetList = ({
             )}
           </button>
 
-          <button
-            onClick={onCreate}
-            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-white transition-all duration-200 flex items-center gap-2"
-          >
+          <button onClick={onCreate} className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-white transition-all duration-200 flex items-center gap-2">
             <Plus className="w-4 h-4" />
-            New Budget
+            New budget
           </button>
         </div>
       </div>
@@ -430,7 +427,7 @@ export const BudgetList = ({
               className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-white transition-all duration-200 flex items-center gap-2 mx-auto"
             >
               <Plus className="w-5 h-5" />
-              Create Budget
+              Create budget
             </button>
           )}
         </div>

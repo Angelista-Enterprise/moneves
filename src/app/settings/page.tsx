@@ -778,7 +778,7 @@ export default function SettingsPage() {
       {/* Header */}
       <PageHeader
         title="Settings"
-        description="Manage your account preferences and application settings"
+        description="Make Claru yours — preferences, formats, and connections"
         icon={<SettingsIcon className="h-6 w-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}
