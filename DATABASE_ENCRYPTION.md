@@ -1,6 +1,6 @@
 # Database Encryption Implementation
 
-This document describes the comprehensive database encryption system implemented for the Moneves application.
+This document describes the comprehensive database encryption system implemented for the Claru application.
 
 ## Overview
 

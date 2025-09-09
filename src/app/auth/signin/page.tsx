@@ -120,11 +120,9 @@ function SignInForm() {
             <div className="h-12 w-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
               <DollarSign className="h-7 w-7 text-white" />
             </div>
-            <h1 className="text-3xl font-bold">Moneves</h1>
+            <h1 className="text-3xl font-bold">Claru</h1>
           </div>
-          <p className="text-gray-400">
-            Welcome back to your financial dashboard
-          </p>
+          <p className="text-gray-400">Clarity for every transaction</p>
         </div>
 
         {/* Main Auth Card */}

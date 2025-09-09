@@ -130,7 +130,7 @@ export default function TransactionsPage() {
       {/* Header */}
       <PageHeader
         title="Transactions"
-        description="View and manage your financial transactions"
+        description="Clarity for every transaction"
         icon={<CreditCard className="h-6 w-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}

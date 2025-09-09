@@ -1,6 +1,6 @@
 # Vercel Deployment Guide
 
-This guide will help you deploy the Moneves app to Vercel.
+This guide will help you deploy the Claru app to Vercel.
 
 ## Prerequisites
 

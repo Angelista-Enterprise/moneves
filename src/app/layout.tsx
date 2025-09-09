@@ -7,8 +7,8 @@ import { FloatingBugButton } from "@/components/bug-report";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Moneves - Personal Finance Management",
-  description: "Manage your finances with ease using Moneves",
+  title: "Claru — Clarity for every transaction",
+  description: "Claru brings your budgets, transactions, and goals together in one clear view.",
 };
 
 export default function RootLayout({

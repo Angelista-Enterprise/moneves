@@ -103,7 +103,7 @@ const DashboardContent = () => {
       {/* Header */}
       <PageHeader
         title="Dashboard"
-        description="Track your finances and reach your goals"
+        description="Clarity for every transaction — budgets, transactions, and goals in one view"
         icon={<DollarSign className="h-6 w-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}
@@ -133,7 +133,7 @@ const DashboardContent = () => {
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-green-800 dark:text-green-200">
-                  Welcome to Moneves! 🎉
+                  Welcome to Claru! 🎉
                 </h3>
                 <p className="text-sm text-green-700 dark:text-green-300 mt-1">
                   Your account is all set up. Start by adding your first

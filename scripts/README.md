@@ -1,6 +1,6 @@
 # Database Seed Scripts
 
-This directory contains scripts for seeding the Moneves database with test data.
+This directory contains scripts for seeding the Claru database with test data.
 
 ## Comprehensive Seed Script
 

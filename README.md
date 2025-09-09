@@ -1,6 +1,6 @@
-# Moneves - Personal Budget Manager
+# Claru — Clarity for every transaction
 
-A modern, full-stack budget tracking application built with Next.js 15, TypeScript, and the latest web technologies. Moneves helps you manage your finances with intelligent budgeting, transaction tracking, and financial goal setting. Ready for deployment on Vercel with cloud database support.
+A modern, full‑stack finance manager built with Next.js 15 and TypeScript. Claru brings your budgets, transactions, and savings goals together in one clear view with smart insights. Ready for Vercel with cloud database support.
 
 ## 🚀 Features
 

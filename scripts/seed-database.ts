@@ -3,7 +3,7 @@
 /**
  * Comprehensive Database Seed Script
  *
- * This script creates a complete test dataset for the Moneves application including:
+ * This script creates a complete test dataset for the Claru application including:
  * - Test user with realistic settings
  * - Budget categories with various spending patterns
  * - Savings goals with progress tracking

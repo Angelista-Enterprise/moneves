@@ -208,8 +208,8 @@ export default function BudgetsPage() {
     <div className="min-h-screen bg-black text-white relative pb-20 xl:pb-0">
       {/* Header */}
       <PageHeader
-        title="Budget Management"
-        description="Create and manage your budget categories"
+        title="Budgets"
+        description="Plan clearly. Spend confidently."
         icon={<Target className="w-6 h-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}
