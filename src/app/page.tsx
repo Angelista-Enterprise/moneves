@@ -1,103 +1,248 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useState, useEffect, Suspense } from "react";
+import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { NavigationDock } from "@/components/navigation-dock";
+import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
+import { BudgetCategories } from "@/components/dashboard/BudgetCategories";
+import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
+import BunqApiStatus from "@/components/dashboard/BunqApiStatus";
+import { getDashboardData } from "@/services/dashboardData";
+import {
+  useBunqAccounts,
+  useUnifiedTransactions,
+  useBunqApiKey,
+  useBudgetCategories,
+  useSavingsGoals,
+} from "@/hooks";
+import { Button, PageHeader } from "@/components/ui";
+import { AddTransactionForm } from "@/components/transactions";
+import { DollarSign, Plus } from "lucide-react";
+
+// Dashboard Content Component (uses useSearchParams)
+const DashboardContent = () => {
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+  const searchParams = useSearchParams();
+
+  const { apiKey: bunqApiKey } = useBunqApiKey(userId || "");
+
+  const [showBalance, setShowBalance] = useState(true);
+  const [showAddTransaction, setShowAddTransaction] = useState(false);
+  const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
+
+  // Check if user just completed setup
+  useEffect(() => {
+    if (searchParams.get("setup") === "complete") {
+      setShowWelcomeMessage(true);
+      // Auto-hide after 5 seconds
+      const timer = setTimeout(() => {
+        setShowWelcomeMessage(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
+
+  // Use Bunq hooks to fetch data
+  const {
+    accounts,
+    loading: accountsLoading,
+    error: accountsError,
+  } = useBunqAccounts(bunqApiKey || undefined);
+
+  // Get the first account ID for fetching transactions
+
+  const {
+    transactions: allTransactions,
+    loading: transactionsLoading,
+    error: transactionsError,
+  } = useUnifiedTransactions({
+    userId,
+    perPage: 50, // Get more transactions for better overview
+  });
+
+  // Get budget categories from database
+  const {
+    data: budgetCategories,
+    isLoading: budgetCategoriesLoading,
+    error: budgetCategoriesError,
+  } = useBudgetCategories(userId || "");
+
+  // Get savings goals from database
+  const {
+    goals: savingsGoals,
+    isLoading: savingsGoalsLoading,
+    error: savingsGoalsError,
+  } = useSavingsGoals(userId || "");
+
+  // Get dashboard data from service (with Bunq data and budget categories if available)
+  const dashboardData = getDashboardData(
+    accounts,
+    allTransactions,
+    budgetCategories
+  );
+
+  // Show loading state if we're fetching data
+  const isLoading =
+    accountsLoading ||
+    transactionsLoading ||
+    budgetCategoriesLoading ||
+    savingsGoalsLoading;
+  // Only show Bunq API errors if we have an API token
+  const hasError =
+    budgetCategoriesError ||
+    savingsGoalsError ||
+    (bunqApiKey && (accountsError || transactionsError));
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-black text-white relative pb-20 xl:pb-0">
+      {/* Header */}
+      <PageHeader
+        title="Dashboard"
+        description="Track your finances and reach your goals"
+        icon={<DollarSign className="h-6 w-6 text-white" />}
+        showBalance={showBalance}
+        onToggleBalance={() => setShowBalance(!showBalance)}
+        rightActions={
+          <div className="flex items-center gap-2">
+            <Button size="sm" onClick={() => setShowAddTransaction(true)}>
+              <Plus size={16} />
+              Add Transaction
+            </Button>
+          </div>
+        }
+      />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div className="max-w-7xl mx-auto px-4 md:px-4">
+        {/* Welcome Message */}
+        {showWelcomeMessage && (
+          <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-green-100 dark:bg-green-900/40 rounded-full flex items-center justify-center">
+                  <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />
+                </div>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-green-800 dark:text-green-200">
+                  Welcome to Moneves! 🎉
+                </h3>
+                <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+                  Your account is all set up. Start by adding your first
+                  transaction or connecting your Bunq account.
+                </p>
+              </div>
+              <div className="ml-auto">
+                <button
+                  onClick={() => setShowWelcomeMessage(false)}
+                  className="text-green-400 hover:text-green-600 dark:text-green-500 dark:hover:text-green-300"
+                >
+                  <span className="sr-only">Dismiss</span>
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Error State */}
+        {hasError && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+            <p className="text-red-400 text-sm">
+              Error loading financial data:{" "}
+              {budgetCategoriesError?.message ||
+                (bunqApiKey && String(accountsError || transactionsError))}
+            </p>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {isLoading && !hasError && (
+          <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+            <p className="text-blue-400 text-sm">
+              {accountsLoading && transactionsLoading
+                ? "Loading accounts and transaction data..."
+                : accountsLoading
+                ? "Loading account data..."
+                : transactionsLoading
+                ? "Loading transaction data..."
+                : budgetCategoriesLoading
+                ? "Loading budget data..."
+                : "Loading financial data..."}
+            </p>
+          </div>
+        )}
+
+        <FinancialOverview
+          items={dashboardData.financialOverview}
+          showBalance={showBalance}
+          isLoading={isLoading}
+        />
+
+        {/* Grid Layout for New Components */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <BunqApiStatus />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Budget Categories - Limited to 3 */}
+        <BudgetCategories
+          items={dashboardData.budgetItems}
+          maxItems={3}
+          showBalance={showBalance}
+          isLoading={isLoading}
+        />
+
+        {/* Recent Transactions */}
+        <RecentTransactions
+          transactions={dashboardData.transactions}
+          maxItems={5}
+          showBalance={showBalance}
+          isLoading={isLoading}
+        />
+      </div>
+
+      {/* Navigation */}
+      <NavigationDock />
+
+      {/* Add Transaction Modal */}
+      <AddTransactionForm
+        isOpen={showAddTransaction}
+        onClose={() => setShowAddTransaction(false)}
+        onSuccess={() => {
+          // Transaction created successfully
+          setShowAddTransaction(false);
+        }}
+        budgetCategories={budgetCategories || []}
+        savingsGoals={savingsGoals || []}
+        userAccounts={[]}
+      />
     </div>
   );
-}
+};
+
+// Main Dashboard Component with Suspense
+const BudgetingDashboard = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-black text-white relative flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+        </div>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
+  );
+};
+
+export default BudgetingDashboard;

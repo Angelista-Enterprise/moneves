@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `setup_completed` integer DEFAULT 0 NOT NULL;
