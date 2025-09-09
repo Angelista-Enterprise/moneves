@@ -56,7 +56,7 @@ export const FinancialOverview = ({
               return (
                 <div
                   key={item.id}
-                  className="group relative p-4 rounded-xl overflow-hidden transition-all duration-500 border border-gray-800 bg-gray-900/50 hover:shadow-[0_4px_20px_rgba(255,255,255,0.05)] hover:-translate-y-1 hover:scale-[1.02] will-change-transform"
+                  className="group relative p-4 rounded-xl flex-1 overflow-hidden transition-all duration-500 border border-gray-800 bg-gray-900/50 hover:shadow-[0_4px_20px_rgba(255,255,255,0.05)] hover:-translate-y-1 hover:scale-[1.02] will-change-transform"
                 >
                   {/* Background gradient overlay */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">

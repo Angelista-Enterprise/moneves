@@ -12,6 +12,7 @@ import {
   useBudgetCategories,
   useShowBalance,
 } from "@/hooks";
+import { BunqApiNotification } from "@/components/notifications/BunqApiNotification";
 import {
   AnimationWrapper,
   StaggeredContainer,
@@ -94,6 +95,8 @@ export default function SavingsGoalsPage() {
     transactions: allTransactions,
     loading: transactionsLoading,
     error: transactionsError,
+    bunqError,
+    hasDbTransactions,
   } = useUnifiedTransactions({
     userId,
     perPage: 100,
@@ -299,18 +302,11 @@ export default function SavingsGoalsPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 md:px-4 py-8">
-        {/* Error State */}
-        {hasError && (
-          <AnimationWrapper animation="fadeIn" delay={200}>
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <p className="text-red-400 text-sm">
-                Error loading data:{" "}
-                {goalsError?.message ||
-                  (bunqApiKey && (accountsError?.message || transactionsError))}
-              </p>
-            </div>
-          </AnimationWrapper>
-        )}
+        {/* Bunq API Notification */}
+        <BunqApiNotification
+          error={bunqError || accountsError}
+          hasDbTransactions={hasDbTransactions}
+        />
 
         {/* Loading State */}
         {isLoading && !hasError && (

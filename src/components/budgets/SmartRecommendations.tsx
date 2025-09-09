@@ -14,6 +14,10 @@ import {
   ArrowRight,
   Sparkles,
   TrendingDown,
+  X,
+  XCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Transaction } from "@/components/transactions/types";
 
@@ -61,6 +65,25 @@ export const SmartRecommendations = ({
   const [filter, setFilter] = useState<
     "all" | "savings" | "spending" | "optimization"
   >("all");
+  const [page, setPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
+
+  // Dismissed state (temporary per visit via sessionStorage, permanent via localStorage)
+  const TEMP_KEY = "moneves:recs:dismissed:temp";
+  const PERM_KEY = "moneves:recs:dismissed:perm";
+  const [dismissedTemp, setDismissedTemp] = useState<string[]>([]);
+  const [dismissedPerm, setDismissedPerm] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const t = JSON.parse(sessionStorage.getItem(TEMP_KEY) || "[]");
+      const p = JSON.parse(localStorage.getItem(PERM_KEY) || "[]");
+      setDismissedTemp(Array.isArray(t) ? t : []);
+      setDismissedPerm(Array.isArray(p) ? p : []);
+    } catch {
+      // ignore parsing issues
+    }
+  }, []);
 
   const generateRecommendations = useCallback(() => {
     const recs: Recommendation[] = [];
@@ -215,6 +238,22 @@ export const SmartRecommendations = ({
     (rec) => filter === "all" || rec.type === filter
   );
 
+  const visibleRecommendations = filteredRecommendations.filter(
+    (rec) => !dismissedTemp.includes(rec.id) && !dismissedPerm.includes(rec.id)
+  );
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(visibleRecommendations.length / ITEMS_PER_PAGE)
+  );
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [totalPages, page]);
+
+  const start = (page - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+  const pagedRecommendations = visibleRecommendations.slice(start, end);
+
   const getImpactColor = (impact: string) => {
     switch (impact) {
       case "high":
@@ -241,6 +280,31 @@ export const SmartRecommendations = ({
     }
   };
 
+  const isActionable = (rec: Recommendation): boolean => {
+    if (rec.type === "goal") return !!onNavigateToSavings;
+    if (rec.type === "savings" && rec.action === "Increase savings goal")
+      return !!onNavigateToSavings;
+    if (
+      rec.type === "optimization" &&
+      rec.action === "Categorize transactions" &&
+      !!onNavigateToCategorize
+    )
+      return true;
+    return false;
+  };
+
+  const dismissTemp = (id: string) => {
+    const next = Array.from(new Set([...dismissedTemp, id]));
+    setDismissedTemp(next);
+    sessionStorage.setItem(TEMP_KEY, JSON.stringify(next));
+  };
+
+  const dismissPerm = (id: string) => {
+    const next = Array.from(new Set([...dismissedPerm, id]));
+    setDismissedPerm(next);
+    localStorage.setItem(PERM_KEY, JSON.stringify(next));
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -262,7 +326,7 @@ export const SmartRecommendations = ({
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-yellow-400" />
           <span className="text-sm text-yellow-400 font-medium">
-            {recommendations.length} recommendations
+            {visibleRecommendations.length} recommendations
           </span>
         </div>
       </div>
@@ -292,7 +356,7 @@ export const SmartRecommendations = ({
 
       {/* Recommendations List */}
       <div className="space-y-4">
-        {filteredRecommendations.length === 0 ? (
+        {visibleRecommendations.length === 0 ? (
           <div className="text-center py-8">
             <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
             <h4 className="text-lg font-semibold text-white mb-2">All Good!</h4>
@@ -301,7 +365,7 @@ export const SmartRecommendations = ({
             </p>
           </div>
         ) : (
-          filteredRecommendations.map((rec, index) => (
+          pagedRecommendations.map((rec, index) => (
             <AnimationWrapper
               key={rec.id}
               animation="fadeIn"
@@ -360,38 +424,61 @@ export const SmartRecommendations = ({
                             {rec.category}
                           </span>
                         )}
-                        {rec.action && (
+                        {rec.action && isActionable(rec) && (
                           <span className="flex items-center gap-1">
                             <ArrowRight className="w-3 h-3" />
                             {rec.action}
                           </span>
                         )}
                       </div>
-
-                      <button
-                        onClick={() => {
-                          if (rec.type === "goal" && onNavigateToSavings) {
-                            onNavigateToSavings();
-                          } else if (
-                            rec.type === "optimization" &&
-                            rec.action === "Categorize transactions" &&
-                            onNavigateToCategorize
-                          ) {
-                            onNavigateToCategorize();
-                          } else {
-                            onApplyRecommendation(rec);
-                          }
-                        }}
-                        className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 rounded-lg text-white text-sm font-medium transition-all duration-200 flex items-center gap-2 opacity-0 group-hover:opacity-100"
-                      >
-                        <Zap className="w-4 h-4" />
-                        {rec.type === "goal"
-                          ? "Set Goal"
-                          : rec.type === "optimization" &&
-                            rec.action === "Categorize transactions"
-                          ? "Categorize"
-                          : "Apply"}
-                      </button>
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {isActionable(rec) && (
+                          <button
+                            onClick={() => {
+                              if (rec.type === "goal" && onNavigateToSavings) {
+                                onNavigateToSavings();
+                              } else if (
+                                rec.type === "savings" &&
+                                rec.action === "Increase savings goal" &&
+                                onNavigateToSavings
+                              ) {
+                                onNavigateToSavings();
+                              } else if (
+                                rec.type === "optimization" &&
+                                rec.action === "Categorize transactions" &&
+                                onNavigateToCategorize
+                              ) {
+                                onNavigateToCategorize();
+                              } else {
+                                onApplyRecommendation(rec);
+                              }
+                            }}
+                            className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 rounded-lg text-white text-sm font-medium transition-all duration-200 flex items-center gap-2"
+                          >
+                            <Zap className="w-4 h-4" />
+                            {rec.type === "goal"
+                              ? "Set Goal"
+                              : rec.type === "optimization" &&
+                                rec.action === "Categorize transactions"
+                              ? "Categorize"
+                              : "Apply"}
+                          </button>
+                        )}
+                        <button
+                          onClick={() => dismissTemp(rec.id)}
+                          className="px-2 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800"
+                          title="Dismiss until next visit"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => dismissPerm(rec.id)}
+                          className="px-2 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800"
+                          title="Dismiss permanently"
+                        >
+                          <XCircle className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -400,6 +487,29 @@ export const SmartRecommendations = ({
           ))
         )}
       </div>
+
+      {/* Pagination */}
+      {visibleRecommendations.length > ITEMS_PER_PAGE && (
+        <div className="flex items-center justify-between mt-2">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page <= 1}
+            className="px-3 py-1 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+          >
+            <ChevronLeft className="w-4 h-4" /> Previous
+          </button>
+          <span className="text-sm text-gray-400">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page >= totalPages}
+            className="px-3 py-1 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+          >
+            Next <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

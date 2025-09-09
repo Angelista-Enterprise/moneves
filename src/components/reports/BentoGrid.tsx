@@ -50,7 +50,7 @@ export const BentoGrid = ({
       {items.map((item, index) => (
         <div
           key={index}
-          className={`group relative p-4 rounded-xl overflow-hidden transition-all duration-500 border border-gray-800 bg-gray-900/50 hover:shadow-[0_8px_32px_rgba(255,255,255,0.08)] hover:-translate-y-2 hover:scale-[1.02] will-change-transform ${
+          className={`group relative p-4 rounded-xl flex-1 overflow-hidden transition-all duration-500 border border-gray-800 bg-gray-900/50 hover:shadow-[0_8px_32px_rgba(255,255,255,0.08)] hover:-translate-y-2 hover:scale-[1.02] will-change-transform ${
             item.colSpan === 2 ? "md:col-span-2" : ""
           }`}
         >

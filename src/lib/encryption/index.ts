@@ -53,7 +53,7 @@ export function encrypt(
     let encrypted = cipher.update(value, "utf8", "hex");
     encrypted += cipher.final("hex");
 
-    // Combine IV + encrypted data
+    // Combine IV + encrypted data (CBC doesn't need auth tag)
     const combined = Buffer.concat([iv, Buffer.from(encrypted, "hex")]);
     return combined.toString("base64");
   } catch (error) {
@@ -81,7 +81,7 @@ export function decrypt(
     const key = getEncryptionKey();
     const combined = Buffer.from(encryptedValue, "base64");
 
-    // Extract IV and encrypted data
+    // Extract IV and encrypted data (CBC format: IV + encrypted data)
     const iv = combined.subarray(0, IV_LENGTH);
     const encrypted = combined.subarray(IV_LENGTH);
 

@@ -55,3 +55,18 @@
     color: hsl(var(--color-foreground));
   }
 }
+
+@layer utilities {
+  /* Hide native scrollbars when using custom or snap scrolling */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+  }
+}

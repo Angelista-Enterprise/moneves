@@ -186,7 +186,7 @@ export const FinancialOverview = ({
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Financial Overview</h2>
         </div>
-g        <BentoGrid
+        <BentoGrid
           items={overviewItems}
           isLoading={isLoading}
           showBalance={showBalance}

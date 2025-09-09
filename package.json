@@ -12,6 +12,7 @@
     "db:push": "drizzle-kit push",
     "db:seed": "tsx src/lib/db/seed.ts",
     "db:seed-test": "tsx seed-test-data.ts",
+    "db:seed-comprehensive": "tsx scripts/seed-database.ts",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {

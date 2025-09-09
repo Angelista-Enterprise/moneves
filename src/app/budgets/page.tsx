@@ -11,6 +11,7 @@ import {
   useSavingsGoals,
   useShowBalance,
 } from "@/hooks";
+import { BunqApiNotification } from "@/components/notifications/BunqApiNotification";
 import { AnimationWrapper, PageHeader } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { AddTransactionForm } from "@/components/transactions";
@@ -49,6 +50,8 @@ export default function BudgetsPage() {
     transactions: allTransactions,
     loading: transactionsLoading,
     error: transactionsError,
+    bunqError,
+    hasDbTransactions,
   } = useUnifiedTransactions({
     userId,
     perPage: 100,
@@ -230,7 +233,7 @@ export default function BudgetsPage() {
       />
 
       {/* Step Navigation */}
-      <div className="border-b border-gray-800 bg-gray-900/30">
+      <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {steps.map((step, index) => {
@@ -286,6 +289,12 @@ export default function BudgetsPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 md:px-4 py-8">
+        {/* Bunq API Notification */}
+        <BunqApiNotification
+          error={bunqError}
+          hasDbTransactions={hasDbTransactions}
+        />
+
         {/* Error State */}
         {bunqApiKey && transactionsError && (
           <AnimationWrapper animation="fadeIn" delay={200}>

@@ -102,6 +102,23 @@ export const BudgetList = ({
     }
   };
 
+  const getGradientClass = (priority?: number) => {
+    switch (priority || 3) {
+      case 1:
+        return "from-red-500 via-pink-500 to-orange-500";
+      case 2:
+        return "from-orange-500 via-amber-500 to-yellow-500";
+      case 3:
+        return "from-indigo-500 via-purple-500 to-pink-500";
+      case 4:
+        return "from-sky-500 via-blue-500 to-indigo-600";
+      case 5:
+        return "from-emerald-500 via-teal-500 to-cyan-500";
+      default:
+        return "from-gray-600 via-gray-500 to-gray-700";
+    }
+  };
+
   const getBudgetTypeIcon = (type: string) => {
     switch (type) {
       case "monthly":
@@ -176,20 +193,21 @@ export const BudgetList = ({
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div
-              className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                budget.color || "bg-gray-600"
-              }`}
-            >
-              <span className="text-2xl">{budget.icon || "💰"}</span>
+            <div className="w-12 h-12 rounded-xl relative overflow-hidden border border-gray-700/60">
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${getGradientClass(
+                  budget.priority
+                )}`}
+              />
+              <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_40%)]" />
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-white group-hover:text-gray-100 transition-colors">
+            <div className="min-w-0">
+              <h3 className="text-lg font-semibold text-white group-hover:text-gray-100 transition-colors truncate">
                 {budget.name}
               </h3>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-gray-400 overflow-hidden">
                 {getBudgetTypeIcon(budget.budgetType || "monthly")}
-                <span className="capitalize">
+                <span className="capitalize truncate">
                   {budget.budgetType || "monthly"}
                 </span>
                 {getStatusIcon(budget.status)}

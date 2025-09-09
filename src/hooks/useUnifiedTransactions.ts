@@ -15,6 +15,8 @@ interface UseUnifiedTransactionsReturn {
   transactions: Transaction[];
   loading: boolean;
   error: string | null;
+  bunqError: string | null;
+  dbError: string | null;
   hasBunqTransactions: boolean;
   hasDbTransactions: boolean;
   bunqCount: number;
@@ -105,7 +107,7 @@ export function useUnifiedTransactions({
   // Combined loading state
   const loading = bunqLoading || dbLoading;
 
-  // Combined error state (only show if both fail)
+  // Only show error if both Bunq and database fail
   const error = bunqError && dbError ? "Failed to load transactions" : null;
 
   // Combined refetch function
@@ -118,6 +120,8 @@ export function useUnifiedTransactions({
     transactions,
     loading,
     error,
+    bunqError: bunqError?.message || null,
+    dbError: dbError?.message || null,
     hasBunqTransactions,
     hasDbTransactions,
     bunqCount,

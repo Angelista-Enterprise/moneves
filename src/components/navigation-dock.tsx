@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter, usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { BugReportModal } from "@/components/bug-report";
@@ -58,6 +59,11 @@ export function NavigationDock() {
   const router = useRouter();
   const pathname = usePathname();
   const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleNavigation = (path: string) => {
     router.push(path);
@@ -71,11 +77,13 @@ export function NavigationDock() {
     setIsSupportModalOpen(true);
   };
 
-  return (
+  if (!mounted) return null;
+
+  const content = (
     <>
       {/* Desktop Navigation Dock - Left Side */}
-      <div className="fixed left-6 top-1/2 transform -translate-y-1/2 z-50 xl:block hidden">
-        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-gray-200/50 dark:border-slate-700/50 shadow-2xl rounded-2xl p-3">
+      <div className="fixed inset-y-0 left-6 flex items-center z-50 xl:flex hidden pointer-events-none">
+        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-gray-200/50 dark:border-slate-700/50 shadow-2xl rounded-2xl p-3 pointer-events-auto">
           <div className="flex flex-col gap-4">
             {navigationItems.map((item) => {
               const Icon = item.icon;
@@ -200,4 +208,6 @@ export function NavigationDock() {
       />
     </>
   );
+
+  return createPortal(content, document.body);
 }

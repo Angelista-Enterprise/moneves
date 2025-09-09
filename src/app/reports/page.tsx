@@ -11,6 +11,7 @@ import {
   useSavingsGoals,
   useShowBalance,
 } from "@/hooks";
+import { BunqApiNotification } from "@/components/notifications/BunqApiNotification";
 import { BunqTransactionResponse } from "@/types/bunq/transactions";
 import {
   updateBudgetCategorySpent,
@@ -51,6 +52,8 @@ export default function ReportsPage() {
     transactions: allTransactions,
     loading: transactionsLoading,
     error: transactionsError,
+    bunqError,
+    hasDbTransactions,
   } = useUnifiedTransactions({
     userId,
     perPage: 100,
@@ -142,6 +145,12 @@ export default function ReportsPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 md:px-4">
+        {/* Bunq API Notification */}
+        <BunqApiNotification
+          error={bunqError}
+          hasDbTransactions={hasDbTransactions}
+        />
+
         {/* Error State */}
         {hasError && (
           <AnimationWrapper animation="fadeIn" delay={200}>

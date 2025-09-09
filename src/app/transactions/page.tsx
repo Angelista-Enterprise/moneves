@@ -10,6 +10,7 @@ import {
   TransactionSummary,
   Transaction,
   AddTransactionForm,
+  RecentTransactionsCarousel,
 } from "@/components/transactions";
 import {
   useCategories,
@@ -19,17 +20,12 @@ import {
   useShowBalance,
 } from "@/hooks";
 import { useBunqAccounts, useBunqApiKey } from "@/hooks";
+import { BunqApiNotification } from "@/components/notifications/BunqApiNotification";
 import {
   filterTransactions,
   sortTransactionsByDate,
-  getDateGroupInfo,
 } from "@/services/transactionData";
-import {
-  Button,
-  PageHeader,
-  AnimationWrapper,
-  StaggeredContainer,
-} from "@/components/ui";
+import { Button, PageHeader, AnimationWrapper } from "@/components/ui";
 import { Plus, CreditCard } from "lucide-react";
 
 export default function TransactionsPage() {
@@ -70,6 +66,8 @@ export default function TransactionsPage() {
     transactions: allTransactions,
     loading: transactionsLoading,
     error: transactionsError,
+    bunqError,
+    hasDbTransactions,
   } = useUnifiedTransactions({
     userId,
     accountId: firstAccountId,
@@ -105,6 +103,8 @@ export default function TransactionsPage() {
   // Sort transactions by date (most recent first)
   const sortedTransactions = sortTransactionsByDate(filteredTransactions);
 
+  // Pagination removed
+
   // Show loading state if we're fetching any data
   const isLoading = accountsLoading || transactionsLoading;
 
@@ -126,7 +126,7 @@ export default function TransactionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white relative pb-20 xl:pb-0">
+    <div className="min-h-screen bg-black text-white relative pb-28">
       {/* Header */}
       <PageHeader
         title="Transactions"
@@ -150,6 +150,12 @@ export default function TransactionsPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 md:px-4 transition-all duration-300">
+        {/* Bunq API Notification */}
+        <BunqApiNotification
+          error={bunqError || accountsError}
+          hasDbTransactions={hasDbTransactions}
+        />
+
         {/* Error States */}
         {hasCriticalError && (
           <AnimationWrapper animation="fadeIn" delay={200}>
@@ -157,29 +163,6 @@ export default function TransactionsPage() {
               <p className="text-red-400 text-sm">
                 Error loading transaction data: Unable to fetch both regular and
                 internal transactions
-              </p>
-            </div>
-          </AnimationWrapper>
-        )}
-
-        {/* Partial Error States */}
-        {hasTransactionsError && (
-          <AnimationWrapper animation="fadeIn" delay={200}>
-            <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-              <p className="text-yellow-400 text-sm">
-                Warning: Unable to load some transactions, but available
-                transactions are shown
-              </p>
-            </div>
-          </AnimationWrapper>
-        )}
-
-        {hasAccountError && (
-          <AnimationWrapper animation="fadeIn" delay={200}>
-            <div className="mb-6 p-4 bg-orange-500/10 border border-orange-500/20 rounded-lg">
-              <p className="text-orange-400 text-sm">
-                Warning: Unable to load account information, but transactions
-                may still be available
               </p>
             </div>
           </AnimationWrapper>
@@ -214,28 +197,19 @@ export default function TransactionsPage() {
 
         {/* Transaction Summary Cards */}
         <TransactionSummary
-          transactions={transactions}
+          transactions={filteredTransactions}
           filteredTransactions={filteredTransactions}
           bunqTransactions={[]}
           showBalance={showBalance}
           isLoading={isLoading}
         />
 
-        <AnimationWrapper animation="fadeIn" delay={300}>
-          <div className="flex justify-between items-center">
-            <div>
-              <h2 className="text-xl font-semibold">Recent Transactions</h2>
-              {hasAnyData && (
-                <p className="text-sm text-gray-400 mt-1">
-                  {transactions.length} transactions
-                </p>
-              )}
-            </div>
-            <p className="text-sm text-gray-400">
-              {filteredTransactions.length} transactions found
-            </p>
-          </div>
-        </AnimationWrapper>
+        <RecentTransactionsCarousel
+          transactions={sortTransactionsByDate(filteredTransactions)}
+          showBalance={showBalance}
+          isLoading={isLoading}
+          maxItems={12}
+        />
 
         {/* Filters and Search */}
         <TransactionFilters
@@ -315,28 +289,18 @@ export default function TransactionsPage() {
               ))}
             </div>
           ) : (
-            <StaggeredContainer
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-              staggerDelay={100}
-              animation="scaleIn"
-            >
-              {sortedTransactions.map((transaction, index) => {
-                const dateGroupInfo = getDateGroupInfo(
-                  transaction,
-                  index,
-                  sortedTransactions
-                );
-                return (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {sortedTransactions.map((transaction) => (
                   <TransactionCard
                     key={transaction.id}
                     transaction={transaction}
                     showBalance={showBalance}
                     onViewDetails={handleViewDetails}
-                    dateGroupInfo={dateGroupInfo}
                   />
-                );
-              })}
-            </StaggeredContainer>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>

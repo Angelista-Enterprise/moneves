@@ -25,6 +25,90 @@ export const TransactionFilters = ({
   setCurrentPeriod,
   categories,
 }: TransactionFiltersProps) => {
+  const amountLabels: Record<string, string> = {
+    all: "All Amounts",
+    "0-50": "$0 - $50",
+    "50-200": "$50 - $200",
+    "200-500": "$200 - $500",
+    "500-1000": "$500 - $1,000",
+    "1000+": "$1,000+",
+  };
+
+  const getCategoryName = (id: string) => categories[id]?.name || "Unknown";
+
+  const activeFilters: Array<{
+    key: string;
+    label: string;
+    onRemove: () => void;
+  }> = [];
+
+  if (searchTerm.trim().length > 0) {
+    activeFilters.push({
+      key: "search",
+      label: `Search: "${searchTerm}"`,
+      onRemove: () => setSearchTerm(""),
+    });
+  }
+  if (selectedType !== "all") {
+    activeFilters.push({
+      key: "type",
+      label: `Type: ${selectedType}`,
+      onRemove: () => setSelectedType("all"),
+    });
+  }
+  if (selectedCategory !== "all") {
+    activeFilters.push({
+      key: "category",
+      label: `Category: ${getCategoryName(selectedCategory)}`,
+      onRemove: () => setSelectedCategory("all"),
+    });
+  }
+  if (selectedAmountRange !== "all") {
+    activeFilters.push({
+      key: "amount",
+      label: `Amount: ${
+        amountLabels[selectedAmountRange] || selectedAmountRange
+      }`,
+      onRemove: () => setSelectedAmountRange("all"),
+    });
+  }
+  if (selectedStatus !== "all") {
+    activeFilters.push({
+      key: "status",
+      label: `Status: ${selectedStatus}`,
+      onRemove: () => setSelectedStatus("all"),
+    });
+  }
+  if (selectedDateRange === "custom" && (startDate || endDate)) {
+    activeFilters.push({
+      key: "date",
+      label: `Date: ${startDate || "…"} → ${endDate || "…"}`,
+      onRemove: () => {
+        setStartDate("");
+        setEndDate("");
+        setSelectedDateRange("all");
+      },
+    });
+  } else if (selectedDateRange !== "all") {
+    activeFilters.push({
+      key: "range",
+      label: `Range: ${selectedDateRange}`,
+      onRemove: () => setSelectedDateRange("all"),
+    });
+  }
+
+  const resetAll = () => {
+    setSearchTerm("");
+    setSelectedType("all");
+    setSelectedCategory("all");
+    setSelectedAmountRange("all");
+    setSelectedDateRange("all");
+    setSelectedStatus("all");
+    setStartDate("");
+    setEndDate("");
+    setCurrentPeriod(0);
+  };
+
   return (
     <AnimationWrapper animation="fadeIn" delay={400}>
       <div className="py-6">
@@ -46,7 +130,12 @@ export const TransactionFilters = ({
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
-              className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600"
+              className={
+                "px-4 py-2 bg-gray-800/50 border rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600 " +
+                (selectedType !== "all"
+                  ? "border-blue-500/60 bg-blue-500/10"
+                  : "border-gray-700")
+              }
             >
               <option value="all">All</option>
               <option value="expense">Expense</option>
@@ -74,7 +163,12 @@ export const TransactionFilters = ({
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600"
+              className={
+                "px-4 py-2 bg-gray-800/50 border rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600 " +
+                (selectedCategory !== "all"
+                  ? "border-blue-500/60 bg-blue-500/10"
+                  : "border-gray-700")
+              }
             >
               <option value="all">All Categories</option>
               {Object.values(categories).map((category) => (
@@ -108,7 +202,12 @@ export const TransactionFilters = ({
                 setSelectedDateRange(e.target.value);
                 setCurrentPeriod(0); // Reset to current period when changing frequency
               }}
-              className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600"
+              className={
+                "px-4 py-2 bg-gray-800/50 border rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600 " +
+                (selectedDateRange !== "all"
+                  ? "border-blue-500/60 bg-blue-500/10"
+                  : "border-gray-700")
+              }
             >
               <option value="all">All Time</option>
               <option value="weekly">Weekly</option>
@@ -141,7 +240,12 @@ export const TransactionFilters = ({
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:border-gray-600"
+                  className={
+                    "px-4 py-2 bg-gray-800/50 border rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:border-gray-600 " +
+                    (startDate
+                      ? "border-blue-500/60 bg-blue-500/10"
+                      : "border-gray-700")
+                  }
                   placeholder="Start Date"
                 />
               </div>
@@ -150,7 +254,12 @@ export const TransactionFilters = ({
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:border-gray-600"
+                  className={
+                    "px-4 py-2 bg-gray-800/50 border rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 hover:border-gray-600 " +
+                    (endDate
+                      ? "border-blue-500/60 bg-blue-500/10"
+                      : "border-gray-700")
+                  }
                   placeholder="End Date"
                 />
               </div>
@@ -162,7 +271,12 @@ export const TransactionFilters = ({
             <select
               value={selectedAmountRange}
               onChange={(e) => setSelectedAmountRange(e.target.value)}
-              className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600"
+              className={
+                "px-4 py-2 bg-gray-800/50 border rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600 " +
+                (selectedAmountRange !== "all"
+                  ? "border-blue-500/60 bg-blue-500/10"
+                  : "border-gray-700")
+              }
             >
               <option value="all">All Amounts</option>
               <option value="0-50">$0 - $50</option>
@@ -193,7 +307,12 @@ export const TransactionFilters = ({
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600"
+              className={
+                "px-4 py-2 bg-gray-800/50 border rounded-lg text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none pr-8 hover:border-gray-600 " +
+                (selectedStatus !== "all"
+                  ? "border-blue-500/60 bg-blue-500/10"
+                  : "border-gray-700")
+              }
             >
               <option value="all">All Status</option>
               <option value="completed">Completed</option>
@@ -293,6 +412,31 @@ export const TransactionFilters = ({
             </div>
           )}
         </div>
+
+        {/* Active filters bar */}
+        {activeFilters.length > 0 && (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="text-xs text-gray-400 mr-1">
+              {activeFilters.length} filter{activeFilters.length > 1 ? "s" : ""}{" "}
+              applied:
+            </span>
+            {activeFilters.map((f) => (
+              <button
+                key={f.key}
+                onClick={f.onRemove}
+                className="px-2 py-1 rounded-full text-xs bg-blue-500/15 text-blue-300 border border-blue-500/30 hover:bg-blue-500/25 transition-colors"
+              >
+                {f.label} <span className="ml-1">×</span>
+              </button>
+            ))}
+            <button
+              onClick={resetAll}
+              className="ml-2 px-2 py-1 rounded-full text-xs bg-gray-800/60 text-gray-200 border border-gray-700 hover:bg-gray-700/60 transition-colors"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
       </div>
     </AnimationWrapper>
   );

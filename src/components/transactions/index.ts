@@ -5,4 +5,6 @@ export { TransactionFilters } from "./TransactionFilters";
 export { TransactionSummary } from "./TransactionSummary";
 export { AddTransactionForm } from "./AddTransactionForm";
 export { TransactionListWithInternal } from "./TransactionListWithInternal";
+export { RecentTransactionsCarousel } from "./RecentTransactionsCarousel";
+export { TransactionTimeline } from "./TransactionTimeline";
 export type * from "./types";

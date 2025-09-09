@@ -774,7 +774,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white pb-20 xl:pb-0">
+    <div className="min-h-screen bg-black/95 backdrop-blur-sm text-white pb-20 xl:pb-0">
       {/* Header */}
       <PageHeader
         title="Settings"

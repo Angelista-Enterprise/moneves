@@ -28,6 +28,8 @@ export interface UserSettings {
   // Subscription settings
   subscriptionTier: string;
   subscriptionStatus: string;
+  // Setup flag
+  setupCompleted: boolean;
 }
 
 export const getUserSettings = async (
@@ -52,6 +54,7 @@ export const getUserSettings = async (
         bunqTransactionLimit: users.bunqTransactionLimit,
         subscriptionTier: users.subscriptionTier,
         subscriptionStatus: users.subscriptionStatus,
+        setupCompleted: users.setupCompleted,
       })
       .from(users)
       .where(eq(users.id, userId))
@@ -83,6 +86,9 @@ export const updateUserSettings = async (
           : {}),
         ...(settings.subscriptionStatus
           ? { subscriptionStatus: settings.subscriptionStatus }
+          : {}),
+        ...(settings.setupCompleted !== undefined
+          ? { setupCompleted: settings.setupCompleted }
           : {}),
       })
       .where(eq(users.id, userId));

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ async function checkIfUserNeedsSetup(): Promise<boolean> {
     const settings = await response.json();
 
     // Check if user has completed setup
-    return !settings.setupCompleted;
+    return settings.setupCompleted === false;
   } catch (error) {
     console.error("Error checking user setup status:", error);
     // If there's an error, assume user needs setup
@@ -36,29 +36,33 @@ function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showTestInfo, setShowTestInfo] = useState(false);
+  const [testUser, setTestUser] = useState<{
+    email: string;
+    password: string;
+  } | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const performSignIn = async (
+    emailParam: string,
+    passwordParam: string
+  ): Promise<void> => {
     setIsLoading(true);
     setError("");
-
     try {
       const result = await signIn("credentials", {
-        email,
-        password,
+        email: emailParam,
+        password: passwordParam,
         redirect: false,
       });
 
       if (result?.error) {
         setError("Invalid email or password");
       } else {
-        // Check if session is established
         const session = await getSession();
         if (session) {
-          // Check if user needs setup (first time login)
           const needsSetup = await checkIfUserNeedsSetup();
           if (needsSetup) {
             router.push("/setup?welcome=true");
@@ -73,6 +77,36 @@ function SignInForm() {
       setIsLoading(false);
     }
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await performSignIn(email, password);
+  };
+
+  // Check if test user exists; if not, call seed script API endpoint
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/auth/test-user");
+        if (res.ok) {
+          const data = await res.json();
+          if (!data.exists) {
+            await fetch("/api/seed", { method: "POST" });
+            const res2 = await fetch("/api/auth/test-user");
+            if (res2.ok) {
+              const data2 = await res2.json();
+              if (data2.exists)
+                setTestUser({ email: data2.email, password: data2.password });
+            }
+          } else {
+            setTestUser({ email: data.email, password: data.password });
+          }
+        }
+      } catch {
+        // ignore
+      }
+    })();
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white relative flex items-center justify-center p-4">
@@ -196,6 +230,51 @@ function SignInForm() {
                 )}
               </Button>
             </form>
+
+            {/* Test user reveal */}
+            {testUser && (
+              <div className="mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowTestInfo(!showTestInfo)}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-blue-500/30 text-blue-300 hover:bg-blue-500/10 transition-colors"
+                >
+                  {showTestInfo
+                    ? "Hide demo credentials"
+                    : "Show demo credentials"}
+                </button>
+                {showTestInfo && (
+                  <div className="mt-3 p-3 rounded-lg border border-gray-700 bg-gray-800/40 text-left">
+                    <p className="text-xs text-gray-400 mb-2">
+                      Use the demo account to explore the app:
+                    </p>
+                    <div className="text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Email</span>
+                        <span className="font-mono">{testUser.email}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Password</span>
+                        <span className="font-mono">{testUser.password}</span>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <Button
+                        type="button"
+                        className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium py-2.5"
+                        onClick={() => {
+                          setEmail(testUser.email);
+                          setPassword(testUser.password);
+                          void performSignIn(testUser.email, testUser.password);
+                        }}
+                      >
+                        Autofill and Sign In
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-400">

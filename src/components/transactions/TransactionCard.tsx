@@ -64,7 +64,11 @@ export const TransactionCard = ({
   const dateStyles = getDateBasedStyles(transaction.date);
 
   return (
-    <div className={`relative ${dateGroupInfo?.isNewDateGroup ? "mt-6" : ""}`}>
+    <div
+      className={`relative flex-1 ${
+        dateGroupInfo?.isNewDateGroup ? "mt-6" : ""
+      }`}
+    >
       {/* Subtle date indicator for new date groups */}
       {dateGroupInfo?.showDateIndicator && (
         <div className="mb-2 flex items-center">
@@ -80,7 +84,7 @@ export const TransactionCard = ({
       )}
 
       <div
-        className={`group relative p-4 rounded-xl overflow-hidden border ${dateStyles.borderGlow} bg-gray-900/50 hover:shadow-[0_8px_32px_rgba(255,255,255,0.08)] hover:-translate-y-2 hover:scale-[1.02] hover:opacity-100 cursor-pointer ${dateStyles.elevation} transition-all duration-500 will-change-transform`}
+        className={`group relative p-4 rounded-xl flex-1 overflow-hidden border ${dateStyles.borderGlow} bg-gray-900/50 hover:shadow-[0_8px_32px_rgba(255,255,255,0.08)] hover:-translate-y-2 hover:scale-[1.02] hover:opacity-100 cursor-pointer ${dateStyles.elevation} transition-all duration-500 will-change-transform`}
         style={{ opacity: dateStyles.opacity }}
         onClick={() => onViewDetails(transaction)}
       >

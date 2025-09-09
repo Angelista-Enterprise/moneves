@@ -8,6 +8,7 @@ import { FinancialOverview } from "@/components/dashboard/FinancialOverview";
 import { BudgetCategories } from "@/components/dashboard/BudgetCategories";
 import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
 import BunqApiStatus from "@/components/dashboard/BunqApiStatus";
+import { BunqApiNotification } from "@/components/notifications/BunqApiNotification";
 import { getDashboardData } from "@/services/dashboardData";
 import {
   useBunqAccounts,
@@ -57,7 +58,9 @@ const DashboardContent = () => {
   const {
     transactions: allTransactions,
     loading: transactionsLoading,
-    error: transactionsError,
+    bunqError,
+    dbError,
+    hasDbTransactions,
   } = useUnifiedTransactions({
     userId,
     perPage: 50, // Get more transactions for better overview
@@ -90,14 +93,13 @@ const DashboardContent = () => {
     transactionsLoading ||
     budgetCategoriesLoading ||
     savingsGoalsLoading;
-  // Only show Bunq API errors if we have an API token
-  const hasError =
-    budgetCategoriesError ||
-    savingsGoalsError ||
-    (bunqApiKey && (accountsError || transactionsError));
+
+  // Only show critical errors (database failures, not Bunq API issues)
+  const hasCriticalError =
+    budgetCategoriesError || savingsGoalsError || dbError;
 
   return (
-    <div className="min-h-screen bg-black text-white relative pb-20 xl:pb-0">
+    <div className="min-h-screen bg-black text-white relative pb-28">
       {/* Header */}
       <PageHeader
         title="Dashboard"
@@ -160,19 +162,26 @@ const DashboardContent = () => {
             </div>
           </div>
         )}
-        {/* Error State */}
-        {hasError && (
+        {/* Bunq API Notification */}
+        <BunqApiNotification
+          error={bunqError || accountsError}
+          hasDbTransactions={hasDbTransactions}
+        />
+
+        {/* Critical Error State (Database failures) */}
+        {hasCriticalError && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
             <p className="text-red-400 text-sm">
               Error loading financial data:{" "}
               {budgetCategoriesError?.message ||
-                (bunqApiKey && String(accountsError || transactionsError))}
+                savingsGoalsError?.message ||
+                dbError}
             </p>
           </div>
         )}
 
         {/* Loading State */}
-        {isLoading && !hasError && (
+        {isLoading && !hasCriticalError && (
           <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
             <p className="text-blue-400 text-sm">
               {accountsLoading && transactionsLoading
