@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { seedDatabase } from "../../../scripts/seed-database";
+import { seedDatabase } from "../../../../scripts/seed-database";
 
 export async function POST() {
   try {

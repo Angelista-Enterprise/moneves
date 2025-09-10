@@ -82,7 +82,7 @@ export function NavigationDock() {
   const content = (
     <>
       {/* Desktop Navigation Dock - Left Side */}
-      <div className="fixed inset-y-0 left-6 flex items-center z-50 xl:flex hidden pointer-events-none">
+      <div className="fixed inset-y-0 left-6 hidden xl:flex items-center z-50 pointer-events-none">
         <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-gray-200/50 dark:border-slate-700/50 shadow-2xl rounded-2xl p-3 pointer-events-auto">
           <div className="flex flex-col gap-4">
             {navigationItems.map((item) => {
