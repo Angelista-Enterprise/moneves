@@ -131,7 +131,6 @@ export default function TransactionsPage() {
       <PageHeader
         title="Transactions"
         description="Clarity for every transaction"
-        icon={<CreditCard className="h-6 w-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}
         rightActions={
@@ -187,10 +186,10 @@ export default function TransactionsPage() {
                 {accountsLoading && transactionsLoading
                   ? "Loading accounts and transactions..."
                   : accountsLoading
-                  ? "Loading account data..."
-                  : transactionsLoading
-                  ? "Loading transactions..."
-                  : "Loading data..."}
+                    ? "Loading account data..."
+                    : transactionsLoading
+                      ? "Loading transactions..."
+                      : "Loading data..."}
               </p>
             </div>
           </AnimationWrapper>
@@ -232,10 +231,13 @@ export default function TransactionsPage() {
           setEndDate={setEndDate}
           currentPeriod={currentPeriod}
           setCurrentPeriod={setCurrentPeriod}
-          categories={categories.reduce((acc, category) => {
-            acc[category.id] = { id: category.id, name: category.name };
-            return acc;
-          }, {} as Record<string, { id: string; name: string }>)}
+          categories={categories.reduce(
+            (acc, category) => {
+              acc[category.id] = { id: category.id, name: category.name };
+              return acc;
+            },
+            {} as Record<string, { id: string; name: string }>
+          )}
         />
 
         {/* No Data State */}

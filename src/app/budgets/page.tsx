@@ -22,7 +22,6 @@ import {
   SmartRecommendations,
 } from "@/components/budgets";
 import {
-  Target,
   Plus,
   CheckCircle,
   ArrowRight,
@@ -210,7 +209,6 @@ export default function BudgetsPage() {
       <PageHeader
         title="Budgets"
         description="Plan clearly. Spend confidently."
-        icon={<Target className="w-6 h-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}
         rightActions={
@@ -251,10 +249,10 @@ export default function BudgetsPage() {
                       isActive
                         ? "bg-blue-500/10 border border-blue-500/20 text-blue-400"
                         : isCompleted
-                        ? "bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500/20"
-                        : isClickable
-                        ? "bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-gray-700/50"
-                        : "bg-gray-800/30 border border-gray-800 text-gray-500 cursor-not-allowed"
+                          ? "bg-green-500/10 border border-green-500/20 text-green-400 hover:bg-green-500/20"
+                          : isClickable
+                            ? "bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-gray-700/50"
+                            : "bg-gray-800/30 border border-gray-800 text-gray-500 cursor-not-allowed"
                     }`}
                   >
                     <div
@@ -262,8 +260,8 @@ export default function BudgetsPage() {
                         isActive
                           ? "bg-blue-500"
                           : isCompleted
-                          ? "bg-green-500"
-                          : "bg-gray-600"
+                            ? "bg-green-500"
+                            : "bg-gray-600"
                       }`}
                     >
                       {isCompleted ? (
@@ -393,8 +391,8 @@ function OverviewStep({
                   utilization > 80
                     ? "text-red-400"
                     : utilization > 50
-                    ? "text-yellow-400"
-                    : "text-green-400"
+                      ? "text-yellow-400"
+                      : "text-green-400"
                 }`}
               >
                 {showBalance ? `${utilization.toFixed(1)}%` : "••••••"}

@@ -105,12 +105,15 @@ const DashboardContent = () => {
       <PageHeader
         title="Dashboard"
         description="Clarity for every transaction — budgets, transactions, and goals in one view"
-        icon={<DollarSign className="h-6 w-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}
         rightActions={
           <div className="flex items-center gap-2">
-            <Button size="sm" variant="ghost-blue" onClick={() => setShowAddTransaction(true)}>
+            <Button
+              size="sm"
+              variant="ghost-blue"
+              onClick={() => setShowAddTransaction(true)}
+            >
               <Plus size={16} />
               Add transaction
             </Button>
@@ -184,12 +187,12 @@ const DashboardContent = () => {
               {accountsLoading && transactionsLoading
                 ? "Loading accounts and transaction data..."
                 : accountsLoading
-                ? "Loading account data..."
-                : transactionsLoading
-                ? "Loading transaction data..."
-                : budgetCategoriesLoading
-                ? "Loading budget data..."
-                : "Loading financial data..."}
+                  ? "Loading account data..."
+                  : transactionsLoading
+                    ? "Loading transaction data..."
+                    : budgetCategoriesLoading
+                      ? "Loading budget data..."
+                      : "Loading financial data..."}
             </p>
           </div>
         )}

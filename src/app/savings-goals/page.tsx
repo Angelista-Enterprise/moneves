@@ -275,7 +275,6 @@ export default function SavingsGoalsPage() {
       <PageHeader
         title="Savings Goals"
         description="Track and manage your financial goals"
-        icon={<PiggyBank className="w-6 h-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}
         rightActions={
@@ -316,12 +315,12 @@ export default function SavingsGoalsPage() {
                 {goalsLoading
                   ? "Loading savings goals..."
                   : bunqApiKey && accountsLoading && transactionsLoading
-                  ? "Loading accounts and transactions..."
-                  : bunqApiKey && accountsLoading
-                  ? "Loading account data..."
-                  : bunqApiKey && transactionsLoading
-                  ? "Loading transaction data..."
-                  : "Loading data..."}
+                    ? "Loading accounts and transactions..."
+                    : bunqApiKey && accountsLoading
+                      ? "Loading account data..."
+                      : bunqApiKey && transactionsLoading
+                        ? "Loading transaction data..."
+                        : "Loading data..."}
               </p>
             </div>
           </AnimationWrapper>
@@ -497,10 +496,10 @@ export default function SavingsGoalsPage() {
                             goal.status === "completed"
                               ? "bg-gradient-to-r from-green-500 to-green-600"
                               : goal.status === "ahead"
-                              ? "bg-gradient-to-r from-blue-500 to-blue-600"
-                              : goal.status === "behind"
-                              ? "bg-gradient-to-r from-yellow-500 to-orange-500"
-                              : "bg-gradient-to-r from-green-500 to-blue-500"
+                                ? "bg-gradient-to-r from-blue-500 to-blue-600"
+                                : goal.status === "behind"
+                                  ? "bg-gradient-to-r from-yellow-500 to-orange-500"
+                                  : "bg-gradient-to-r from-green-500 to-blue-500"
                           }`}
                           style={{ width: `${Math.min(goal.progress, 100)}%` }}
                         />

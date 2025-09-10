@@ -8,7 +8,6 @@ import Image from "next/image";
 interface PageHeaderProps {
   title: string;
   description: string;
-  icon: ReactNode;
   showBalance?: boolean;
   onToggleBalance?: () => void;
   rightActions?: ReactNode;
@@ -18,7 +17,6 @@ interface PageHeaderProps {
 export const PageHeader = ({
   title,
   description,
-  icon,
   showBalance = false,
   onToggleBalance,
   rightActions,

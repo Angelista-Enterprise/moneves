@@ -26,7 +26,6 @@ import {
   AlertCircle,
   CheckCircle,
   X,
-  Settings as SettingsIcon,
   HelpCircle,
   ExternalLink,
 } from "lucide-react";
@@ -781,7 +780,6 @@ export default function SettingsPage() {
       <PageHeader
         title="Settings"
         description="Make Claru yours — preferences, formats, and connections"
-        icon={<SettingsIcon className="h-6 w-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}
         rightActions={
@@ -810,10 +808,10 @@ export default function SettingsPage() {
               {saveStatus === "saved"
                 ? "Saved"
                 : saveStatus === "error"
-                ? "Error"
-                : hasErrors
-                ? "Fix Errors"
-                : "Save Changes"}
+                  ? "Error"
+                  : hasErrors
+                    ? "Fix Errors"
+                    : "Save Changes"}
             </Button>
           </div>
         }
@@ -1230,7 +1228,7 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Button
-                    variant="ghost"
+                    variant="secondary"
                     size="medium"
                     onClick={() => window.open("/support", "_blank")}
                     className="justify-start h-auto p-4 text-left"
@@ -1252,7 +1250,7 @@ export default function SettingsPage() {
                   </Button>
 
                   <Button
-                    variant="ghost"
+                    variant="secondary"
                     size="medium"
                     onClick={() => window.open("/terms", "_blank")}
                     className="justify-start h-auto p-4 text-left"
@@ -1276,7 +1274,7 @@ export default function SettingsPage() {
 
                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                   <Button
-                    variant="ghost"
+                    variant="secondary"
                     size="medium"
                     onClick={() => window.open("/support", "_blank")}
                     className="w-full justify-start h-auto p-4 text-left"

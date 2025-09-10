@@ -28,7 +28,7 @@ import {
   CategoryData,
 } from "@/components/reports";
 import { AddTransactionForm } from "@/components/transactions";
-import { Target, Plus, BarChart3 } from "lucide-react";
+import { Target, Plus } from "lucide-react";
 import { PageHeader } from "@/components/ui";
 
 export default function ReportsPage() {
@@ -122,7 +122,6 @@ export default function ReportsPage() {
       <PageHeader
         title="Reports & Analysis"
         description="Comprehensive financial overview, category analysis, and trends"
-        icon={<BarChart3 className="h-6 w-6 text-white" />}
         showBalance={showBalance}
         onToggleBalance={toggleBalance}
         rightActions={
@@ -172,8 +171,8 @@ export default function ReportsPage() {
                 {budgetCategoriesLoading
                   ? "Loading budget data..."
                   : bunqApiKey && transactionsLoading
-                  ? "Loading transaction data..."
-                  : "Loading data..."}
+                    ? "Loading transaction data..."
+                    : "Loading data..."}
               </p>
             </div>
           </AnimationWrapper>

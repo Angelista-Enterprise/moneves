@@ -1,0 +1,5 @@
+# Run lint-staged to check and fix code issues
+npx lint-staged
+
+# Run build to ensure code compiles before committing
+npm run build
