@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { transactionCategorizations, budgetCategories } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq, and } from "drizzle-orm";
+import { selectOneEncrypted } from "@/lib/db/encrypted-db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,18 +24,16 @@ export async function POST(request: NextRequest) {
 
     // Check if category exists and belongs to user
     if (categoryId) {
-      const category = await db
-        .select()
-        .from(budgetCategories)
-        .where(
-          and(
-            eq(budgetCategories.id, categoryId),
-            eq(budgetCategories.userId, session.user.id)
-          )
-        )
-        .limit(1);
+      const category = await selectOneEncrypted(
+        budgetCategories,
+        "budgetCategories",
+        and(
+          eq(budgetCategories.id, categoryId),
+          eq(budgetCategories.userId, session.user.id)
+        )!
+      );
 
-      if (category.length === 0) {
+      if (!category) {
         return NextResponse.json(
           { error: "Category not found" },
           { status: 404 }

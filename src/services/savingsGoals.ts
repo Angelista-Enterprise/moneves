@@ -1,6 +1,12 @@
 import { savingsGoals } from "@/lib/db/schema";
 import { eq, and, desc } from "drizzle-orm";
-import { selectEncrypted, selectOneEncrypted, insertEncrypted, updateEncrypted, deleteEncrypted } from "@/lib/db/encrypted-db";
+import {
+  selectEncrypted,
+  selectOneEncrypted,
+  insertEncrypted,
+  updateEncrypted,
+  deleteEncrypted,
+} from "@/lib/db/encrypted-db";
 
 export async function getSavingsGoals(userId: string) {
   try {
@@ -85,7 +91,7 @@ export async function deleteSavingsGoal(id: number, userId: string) {
   try {
     // Get the goal before deleting for return value
     const goal = await getSavingsGoalById(id, userId);
-    
+
     await deleteEncrypted(
       savingsGoals,
       and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))!
