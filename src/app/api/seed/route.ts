@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
-import { exec } from "node:child_process";
-import { promisify } from "node:util";
-
-const execAsync = promisify(exec);
+import { seedDatabase } from "../../../scripts/seed-database";
 
 export async function POST() {
   try {
-    // Call the seed script that populates a demo user and sample data
-    await execAsync("npm run db:seed-comprehensive");
+    // Call the seed function directly instead of shell command
+    await seedDatabase();
     return NextResponse.json({ ok: true });
   } catch (e) {
+    console.error("[Seed API] Error:", e);
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });
   }
 }

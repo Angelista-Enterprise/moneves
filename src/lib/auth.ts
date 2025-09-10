@@ -8,7 +8,10 @@ import { selectOneEncrypted } from "@/lib/db/encrypted-db";
 import { User } from "@/types/database";
 
 // Debug environment variables
-console.log("[Auth] NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET ? "Set" : "Not set");
+console.log(
+  "[Auth] NEXTAUTH_SECRET:",
+  process.env.NEXTAUTH_SECRET ? "Set" : "Not set"
+);
 console.log("[Auth] NEXTAUTH_URL:", process.env.NEXTAUTH_URL || "Not set");
 console.log("[Auth] VERCEL_URL:", process.env.VERCEL_URL || "Not set");
 
