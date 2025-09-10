@@ -618,6 +618,47 @@ export default function SetupWizard() {
               checked={analyticsOptIn}
               onChange={setAnalyticsOptIn}
             />
+
+            {/* Legal Consent */}
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  id="terms-consent"
+                  className="mt-1 h-4 w-4 text-brand-600 focus:ring-brand-500 border-gray-300 rounded"
+                  required
+                />
+                <div>
+                  <label
+                    htmlFor="terms-consent"
+                    className="text-sm font-medium text-blue-900 dark:text-blue-100"
+                  >
+                    I agree to the Terms of Use and Privacy Policy
+                  </label>
+                  <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                    By checking this box, you agree to our{" "}
+                    <a
+                      href="/terms"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-blue-800 dark:hover:text-blue-200"
+                    >
+                      Terms of Use
+                    </a>{" "}
+                    and{" "}
+                    <a
+                      href="/privacy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-blue-800 dark:hover:text-blue-200"
+                    >
+                      Privacy Policy
+                    </a>
+                    . This is required to use Claru.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         );
 

@@ -284,6 +284,29 @@ function SignInForm() {
                   Sign up
                 </Link>
               </p>
+
+              {/* Legal Links */}
+              <div className="mt-4 text-xs text-gray-500 space-y-1">
+                <div className="flex justify-center gap-4">
+                  <Link
+                    href="/privacy"
+                    className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                  >
+                    Privacy Policy
+                  </Link>
+                  <span>•</span>
+                  <Link
+                    href="/terms"
+                    className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                  >
+                    Terms of Use
+                  </Link>
+                </div>
+                <p>
+                  By signing in, you agree to our Terms of Use and Privacy
+                  Policy.
+                </p>
+              </div>
             </div>
           </div>
 

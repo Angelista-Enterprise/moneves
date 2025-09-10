@@ -3,12 +3,14 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/utils/providers";
 import { FloatingBugButton } from "@/components/bug-report";
+import { Footer } from "@/components/ui/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Claru — Clarity for every transaction",
-  description: "Claru brings your budgets, transactions, and goals together in one clear view.",
+  description:
+    "Claru brings your budgets, transactions, and goals together in one clear view.",
 };
 
 export default function RootLayout({
@@ -21,6 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <main className="min-h-screen bg-background">{children}</main>
+          <Footer />
           <FloatingBugButton />
         </Providers>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

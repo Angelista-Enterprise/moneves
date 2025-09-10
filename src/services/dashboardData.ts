@@ -173,7 +173,6 @@ export const getDashboardData = (
   // Use transactions directly since they're already in the correct format
   const convertedTransactions = transactions || [];
 
-
   // Calculate financial overview
   const financialOverview = calculateFinancialOverview(
     accounts,
