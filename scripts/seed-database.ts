@@ -87,7 +87,7 @@ async function seedDatabase() {
 
   // Test database connection
   try {
-    await db.execute(sql`SELECT 1`);
+    await db.run(sql`SELECT 1`);
     console.log("✅ Database connection successful");
   } catch (error) {
     console.error("❌ Database connection failed:", error);
