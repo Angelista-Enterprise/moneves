@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 
 export default function PrivacyPolicyPage() {
-  const lastUpdated = "December 2024";
+  const lastUpdated = "September 2025";
 
   const sections = [
     { id: "introduction", title: "Introduction", icon: Shield },
@@ -46,10 +46,10 @@ export default function PrivacyPolicyPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-            <Link href="/">
+            <Link href="/support">
               <Button variant="ghost" size="sm" className="gap-2">
                 <ArrowLeft className="w-4 h-4" />
-                Back to Claru
+                Back to Support
               </Button>
             </Link>
           </div>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter, usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { BugReportModal } from "@/components/bug-report";
+import Image from "next/image";
 import {
   BarChart3,
   CreditCard,
@@ -58,7 +58,6 @@ const navigationItems = [
 export function NavigationDock() {
   const router = useRouter();
   const pathname = usePathname();
-  const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -74,7 +73,7 @@ export function NavigationDock() {
   };
 
   const handleSupportClick = () => {
-    setIsSupportModalOpen(true);
+    router.push("/support");
   };
 
   if (!mounted) return null;
@@ -137,6 +136,19 @@ export function NavigationDock() {
                 </div>
               </div>
             </div>
+
+            {/* Subtle branding */}
+            <div className="pt-2 border-t border-gray-200/50 dark:border-slate-700/50">
+              <div className="flex justify-center">
+                <Image
+                  src="/brand/claru-icon.svg"
+                  alt="Claru"
+                  width={24}
+                  height={24}
+                  className="opacity-60 hover:opacity-100 transition-opacity duration-200"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -197,15 +209,22 @@ export function NavigationDock() {
                 </div>
               </div>
             </div>
+
+            {/* Subtle branding for Mobile */}
+            <div className="pl-2 border-l border-gray-200/50 dark:border-slate-700/50">
+              <div className="w-10 h-10 rounded-xl aspect-square flex items-center justify-center">
+                <Image
+                  src="/brand/claru-icon.svg"
+                  alt="Claru"
+                  width={20}
+                  height={20}
+                  className="opacity-60 hover:opacity-100 transition-opacity duration-200"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Bug Report Modal */}
-      <BugReportModal
-        isOpen={isSupportModalOpen}
-        onClose={() => setIsSupportModalOpen(false)}
-      />
     </>
   );
 

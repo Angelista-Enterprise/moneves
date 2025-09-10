@@ -27,6 +27,8 @@ import {
   CheckCircle,
   X,
   Settings as SettingsIcon,
+  HelpCircle,
+  ExternalLink,
 } from "lucide-react";
 
 // Utility function for className merging
@@ -1216,6 +1218,85 @@ export default function SettingsPage() {
                     </Button>
                   </div>
                 )}
+              </div>
+            </SettingsCard>
+
+            {/* Help & Legal */}
+            <SettingsCard
+              title="Help & Legal"
+              description="Access help resources, legal documents, and support"
+              icon={<HelpCircle className="w-4 h-4 text-purple-500" />}
+            >
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Button
+                    variant="ghost"
+                    size="medium"
+                    onClick={() => window.open("/support", "_blank")}
+                    className="justify-start h-auto p-4 text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20">
+                        <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          Privacy Policy
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Data protection & privacy
+                        </div>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-gray-400 ml-auto" />
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="medium"
+                    onClick={() => window.open("/terms", "_blank")}
+                    className="justify-start h-auto p-4 text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/20">
+                        <CreditCard className="w-4 h-4 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          Terms of Use
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Legal terms & conditions
+                        </div>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-gray-400 ml-auto" />
+                    </div>
+                  </Button>
+                </div>
+
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <Button
+                    variant="ghost"
+                    size="medium"
+                    onClick={() => window.open("/support", "_blank")}
+                    className="w-full justify-start h-auto p-4 text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-purple-50 dark:bg-purple-900/20">
+                        <HelpCircle className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          Help Center
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Get help, report bugs, and find answers
+                        </div>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-gray-400 ml-auto" />
+                    </div>
+                  </Button>
+                </div>
               </div>
             </SettingsCard>
           </div>
