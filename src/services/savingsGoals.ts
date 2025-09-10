@@ -1,4 +1,3 @@
-import { db } from "@/lib/db";
 import { savingsGoals } from "@/lib/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { selectEncrypted, selectOneEncrypted, insertEncrypted, updateEncrypted, deleteEncrypted } from "@/lib/db/encrypted-db";
@@ -22,7 +21,7 @@ export async function getSavingsGoalById(id: number, userId: string) {
     const goal = await selectOneEncrypted(
       savingsGoals,
       "savingsGoals",
-      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))
+      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))!
     );
 
     return goal;
@@ -71,7 +70,7 @@ export async function updateSavingsGoal(
       savingsGoals,
       "savingsGoals",
       updates,
-      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))
+      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))!
     );
 
     // Return the updated goal by fetching it
@@ -89,7 +88,7 @@ export async function deleteSavingsGoal(id: number, userId: string) {
     
     await deleteEncrypted(
       savingsGoals,
-      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))
+      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))!
     );
 
     return goal;
@@ -109,7 +108,7 @@ export async function updateSavingsGoalCurrentAmount(
       savingsGoals,
       "savingsGoals",
       { currentAmount },
-      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))
+      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))!
     );
 
     // Return the updated goal by fetching it
