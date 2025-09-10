@@ -21,14 +21,14 @@
   --color-input: 214.3 31.8% 91.4%;
   --color-ring: 221.2 83.2% 53.3%;
   --radius: 0.5rem;
-
+  
   /* Claru brand tokens */
-  --brand-indigo: 245 58% 57%; /* ~#4F46E5 */
-  --brand-violet: 269 83% 58%; /* ~#7C3AED */
-  --brand-emerald: 152 76% 40%; /* ~#10B981 */
-  --brand-sky: 199 89% 48%; /* ~#0EA5E9 */
-  --brand-amber: 38 92% 50%; /* ~#F59E0B */
-  --brand-rose: 350 89% 60%; /* ~#E11D48 */
+  --brand-indigo: 245 58% 57%; /* ~ #4F46E5 */
+  --brand-violet: 269 83% 58%; /* ~ #7C3AED */
+  --brand-emerald: 152 76% 40%; /* ~ #10B981 */
+  --brand-sky: 199 89% 48%; /* ~ #0EA5E9 */
+  --brand-amber: 38 92% 50%; /* ~ #F59E0B */
+  --brand-rose: 350 89% 60%; /* ~ #E11D48 */
 }
 
 @theme dark {
@@ -51,7 +51,7 @@
   --color-border: 217.2 32.6% 17.5%;
   --color-input: 217.2 32.6% 17.5%;
   --color-ring: 224.3 76.3% 94.1%;
-
+  
   /* Claru brand tokens (dark uses same hues; surfaces change) */
   --brand-indigo: 245 58% 57%;
   --brand-violet: 269 83% 58%;
@@ -77,23 +77,30 @@
   .bg-brand-gradient {
     background-image: linear-gradient(135deg, hsl(var(--brand-indigo)), hsl(var(--brand-violet)));
   }
+  .bg-brand-gradient-y {
+    background-image: linear-gradient(to bottom, hsl(var(--brand-indigo)), hsl(var(--brand-violet)));
+  }
+  
   .from-brand {
     --tw-gradient-from: hsl(var(--brand-indigo)) var(--tw-gradient-from-position);
     --tw-gradient-to: hsl(var(--brand-indigo)) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
   }
+  
   .to-brand {
     --tw-gradient-to: hsl(var(--brand-violet)) var(--tw-gradient-to-position);
   }
+  
   .from-success-brand {
     --tw-gradient-from: hsl(var(--brand-emerald)) var(--tw-gradient-from-position);
     --tw-gradient-to: hsl(var(--brand-emerald)) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
   }
+  
   .to-success-brand {
     --tw-gradient-to: hsl(var(--brand-emerald)) var(--tw-gradient-to-position);
   }
-
+  
   /* Hide native scrollbars when using custom or snap scrolling */
   .no-scrollbar {
     -ms-overflow-style: none;

@@ -98,14 +98,14 @@ export function NavigationDock() {
                   <div
                     className={`w-12 h-12 rounded-xl aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer ${
                       isActive
-                        ? "bg-gradient-to-br from-brand to-brand text-white shadow-lg scale-105"
+                        ? "bg-brand-gradient text-white shadow-lg scale-105"
                         : "bg-gray-100/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-105"
                     }`}
                   >
                     <Icon size={22} />
                   </div>
                   {isActive && (
-                    <div className="absolute -right-2 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-brand to-brand rounded-full"></div>
+                    <div className="absolute -right-2 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-brand-gradient-y rounded-full"></div>
                   )}
                   <div className="absolute left-16 top-1/2 transform -translate-y-1/2 bg-gray-900/90 dark:bg-gray-800/90 backdrop-blur-sm text-white text-sm font-medium px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                     {item.label}
@@ -158,14 +158,14 @@ export function NavigationDock() {
                   <div
                     className={`w-10 h-10 rounded-xl aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer ${
                       isActive
-                        ? "bg-gradient-to-br from-brand to-brand text-white shadow-lg scale-105"
+                        ? "bg-brand-gradient text-white shadow-lg scale-105"
                         : "bg-gray-100/80 dark:bg-gray-800/80 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-105"
                     }`}
                   >
                     <Icon size={18} />
                   </div>
                   {isActive && (
-                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-6 bg-gradient-to-b from-brand to-brand rounded-full"></div>
+                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-6 bg-brand-gradient-y rounded-full"></div>
                   )}
                   <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-gray-900/90 dark:bg-gray-800/90 backdrop-blur-sm text-white text-xs font-medium px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                     {item.label}

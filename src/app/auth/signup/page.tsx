@@ -125,7 +125,10 @@ export default function SignUpPage() {
               continue...
             </p>
             <div className="w-full bg-gray-700 rounded-full h-2">
-              <div className="bg-gradient-to-r from-brand to-brand h-2 rounded-full animate-pulse" style={{ width: "100%" }}></div>
+              <div
+                className="bg-gradient-to-r from-brand to-brand h-2 rounded-full animate-pulse"
+                style={{ width: "100%" }}
+              ></div>
             </div>
           </div>
 
@@ -287,7 +290,11 @@ export default function SignUpPage() {
                 </div>
               </div>
 
-              <Button type="submit" disabled={isLoading} className="w-full bg-brand-gradient hover:opacity-95 text-white font-medium py-2.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-brand-gradient hover:opacity-95 text-white font-medium py-2.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
