@@ -7,8 +7,14 @@ import * as bcrypt from "bcryptjs";
 import { selectOneEncrypted } from "@/lib/db/encrypted-db";
 import { User } from "@/types/database";
 
+// Debug environment variables
+console.log("[Auth] NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET ? "Set" : "Not set");
+console.log("[Auth] NEXTAUTH_URL:", process.env.NEXTAUTH_URL || "Not set");
+console.log("[Auth] VERCEL_URL:", process.env.VERCEL_URL || "Not set");
+
 const authConfig = {
   secret: process.env.NEXTAUTH_SECRET,
+  trustHost: true, // Allow Vercel to handle the host
   providers: [
     Credentials({
       name: "credentials",
@@ -76,38 +82,48 @@ const authConfig = {
   callbacks: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async jwt({ token, user }: { token: any; user: any }) {
-      if (user) {
-        // Initial login - user object is available
-        token.id = user.id;
-        token.bunqApiKey = user.bunqApiKey;
-      } else if (token.id) {
-        // Subsequent requests - fetch Bunq API key from database
-        try {
-          const dbUser = await selectOneEncrypted<User>(
-            users,
-            "users",
-            eq(users.id, token.id as string)
-          );
+      try {
+        if (user) {
+          // Initial login - user object is available
+          token.id = user.id;
+          token.bunqApiKey = user.bunqApiKey;
+        } else if (token.id) {
+          // Subsequent requests - fetch Bunq API key from database
+          try {
+            const dbUser = await selectOneEncrypted<User>(
+              users,
+              "users",
+              eq(users.id, token.id as string)
+            );
 
-          if (dbUser) {
-            token.bunqApiKey = dbUser.bunqApiKey as string | null;
+            if (dbUser) {
+              token.bunqApiKey = dbUser.bunqApiKey as string | null;
+            }
+          } catch (error) {
+            console.error("[JWT Callback] Error fetching Bunq API key:", error);
           }
-        } catch (error) {
-          console.error("[JWT Callback] Error fetching Bunq API key:", error);
         }
-      }
 
-      return token;
+        return token;
+      } catch (error) {
+        console.error("[JWT Callback] Unexpected error:", error);
+        return token;
+      }
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, token }: { session: any; token: any }) {
-      if (token.id) {
-        session.user.id = token.id as string;
+      try {
+        if (token.id) {
+          session.user.id = token.id as string;
+        }
+        if (token.bunqApiKey) {
+          session.user.bunqApiKey = token.bunqApiKey as string;
+        }
+        return session;
+      } catch (error) {
+        console.error("[Session Callback] Error:", error);
+        return session;
       }
-      if (token.bunqApiKey) {
-        session.user.bunqApiKey = token.bunqApiKey as string;
-      }
-      return session;
     },
   },
   pages: {
