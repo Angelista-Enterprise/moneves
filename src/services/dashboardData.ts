@@ -78,17 +78,23 @@ const calculateFinancialOverview = (
   accounts?: BunqAccountResponse[],
   transactions?: AppTransaction[]
 ): FinancialOverviewItem[] => {
-  if (!accounts || !transactions) {
-    return [];
-  }
+  // Calculate total balance from accounts if available
+  const totalBalance =
+    accounts?.reduce((sum, account) => {
+      return sum + parseFloat(account.balance || "0");
+    }, 0) || 0;
 
-  // Calculate total balance
-  const totalBalance = accounts.reduce((sum, account) => {
-    return sum + parseFloat(account.balance || "0");
-  }, 0);
+  // If no accounts (or empty accounts) but we have transactions, calculate balance from transactions
+  const calculatedBalance =
+    (!accounts || accounts.length === 0) && transactions
+      ? transactions.reduce((sum, tx) => {
+          // Amounts are already in correct format (income positive, expenses negative)
+          return sum + tx.amount;
+        }, 0)
+      : totalBalance;
 
   // Calculate financial metrics with real period-over-period changes
-  const metrics = calculateFinancialMetrics(transactions, "month");
+  const metrics = calculateFinancialMetrics(transactions || [], "month");
 
   const savingsRate =
     metrics.totalIncome > 0
@@ -96,12 +102,20 @@ const calculateFinancialOverview = (
         100
       : 0;
 
+  // Return empty array if no data at all
+  if ((!accounts || accounts.length === 0) && !transactions) {
+    return [];
+  }
+
   return [
     {
       id: "total-balance",
       title: "Total Balance",
-      description: "Combined balance across all accounts",
-      amount: totalBalance,
+      description:
+        accounts && accounts.length > 0
+          ? "Combined balance across all accounts"
+          : "Calculated from transaction history",
+      amount: calculatedBalance,
       change: 0, // Balance change would need account history, keeping as 0 for now
       changeType: "increase" as const,
       icon: Wallet,
@@ -158,6 +172,7 @@ export const getDashboardData = (
 ): DashboardData => {
   // Use transactions directly since they're already in the correct format
   const convertedTransactions = transactions || [];
+
 
   // Calculate financial overview
   const financialOverview = calculateFinancialOverview(

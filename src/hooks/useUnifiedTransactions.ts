@@ -77,10 +77,17 @@ export function useUnifiedTransactions({
         categoryName?: string;
         accountName?: string;
       };
+
+      // Convert amount to negative for expenses to match Bunq format
+      const amount =
+        transaction.type === "expense"
+          ? -Math.abs(transaction.amount)
+          : Math.abs(transaction.amount);
+
       return {
         id: transaction.id,
         description: transaction.description,
-        amount: transaction.amount,
+        amount,
         type: transaction.type as "income" | "expense",
         date: transaction.date, // Keep as string to match Transaction interface
         categoryId: transaction.categoryId,
