@@ -74,6 +74,10 @@ const authConfig = {
           };
         } catch (error) {
           console.error("[Auth] Error during authentication:", error);
+          console.error("[Auth] Error details:", {
+            message: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          });
           return null;
         }
       },
@@ -102,9 +106,13 @@ const authConfig = {
             if (dbUser) {
               token.bunqApiKey = dbUser.bunqApiKey as string | null;
             }
-          } catch (error) {
-            console.error("[JWT Callback] Error fetching Bunq API key:", error);
-          }
+        } catch (error) {
+          console.error("[JWT Callback] Error fetching Bunq API key:", error);
+          console.error("[JWT Callback] Error details:", {
+            message: error instanceof Error ? error.message : "Unknown error",
+            stack: error instanceof Error ? error.stack : undefined,
+          });
+        }
         }
 
         return token;
