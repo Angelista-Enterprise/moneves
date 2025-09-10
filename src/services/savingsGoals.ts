@@ -1,31 +1,16 @@
 import { db } from "@/lib/db";
 import { savingsGoals } from "@/lib/db/schema";
 import { eq, and, desc } from "drizzle-orm";
-import {
-  decryptAfterFetch,
-  decryptMultipleAfterFetch,
-  encryptField,
-} from "@/lib/encryption/service";
+import { selectEncrypted, selectOneEncrypted, insertEncrypted, updateEncrypted, deleteEncrypted } from "@/lib/db/encrypted-db";
 
 export async function getSavingsGoals(userId: string) {
   try {
-    const goals = await db
-      .select({
-        id: savingsGoals.id,
-        userId: savingsGoals.userId,
-        accountId: savingsGoals.accountId,
-        name: savingsGoals.name,
-        targetAmount: savingsGoals.targetAmount,
-        currentAmount: savingsGoals.currentAmount,
-        targetDate: savingsGoals.targetDate,
-        createdAt: savingsGoals.createdAt,
-      })
-      .from(savingsGoals)
-      .where(eq(savingsGoals.userId, userId))
-      .orderBy(desc(savingsGoals.createdAt));
+    const goals = await selectEncrypted(savingsGoals, "savingsGoals", {
+      where: eq(savingsGoals.userId, userId),
+      orderBy: desc(savingsGoals.createdAt),
+    });
 
-    // Decrypt encrypted fields (e.g., name)
-    return decryptMultipleAfterFetch("savingsGoals", goals);
+    return goals;
   } catch (error) {
     console.error("[savingsGoals] Error fetching savings goals:", error);
     throw new Error("Failed to fetch savings goals");
@@ -34,22 +19,13 @@ export async function getSavingsGoals(userId: string) {
 
 export async function getSavingsGoalById(id: number, userId: string) {
   try {
-    const goal = await db
-      .select({
-        id: savingsGoals.id,
-        userId: savingsGoals.userId,
-        accountId: savingsGoals.accountId,
-        name: savingsGoals.name,
-        targetAmount: savingsGoals.targetAmount,
-        currentAmount: savingsGoals.currentAmount,
-        targetDate: savingsGoals.targetDate,
-        createdAt: savingsGoals.createdAt,
-      })
-      .from(savingsGoals)
-      .where(and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId)))
-      .limit(1);
+    const goal = await selectOneEncrypted(
+      savingsGoals,
+      "savingsGoals",
+      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))
+    );
 
-    return goal[0] ? decryptAfterFetch("savingsGoals", goal[0]) : null;
+    return goal;
   } catch (error) {
     console.error("[savingsGoals] Error fetching savings goal:", error);
     throw new Error("Failed to fetch savings goal");
@@ -64,20 +40,16 @@ export async function createSavingsGoal(
   targetDate?: string
 ) {
   try {
-    const newGoal = await db
-      .insert(savingsGoals)
-      .values({
-        userId,
-        accountId,
-        // Encrypt sensitive fields before save
-        name: (encryptField("savingsGoals", "name", name) as unknown) as string,
-        targetAmount,
-        currentAmount: 0,
-        targetDate,
-      })
-      .returning();
+    const newGoal = await insertEncrypted(savingsGoals, "savingsGoals", {
+      userId,
+      accountId,
+      name,
+      targetAmount,
+      currentAmount: 0,
+      targetDate,
+    });
 
-    return decryptAfterFetch("savingsGoals", newGoal[0]);
+    return newGoal;
   } catch (error) {
     console.error("[savingsGoals] Error creating savings goal:", error);
     throw new Error("Failed to create savings goal");
@@ -95,24 +67,15 @@ export async function updateSavingsGoal(
   }
 ) {
   try {
-    const encryptedUpdates: typeof updates = { ...updates };
-    if (encryptedUpdates.name !== undefined) {
-      encryptedUpdates.name = encryptField(
-        "savingsGoals",
-        "name",
-        encryptedUpdates.name
-      ) as string;
-    }
+    await updateEncrypted(
+      savingsGoals,
+      "savingsGoals",
+      updates,
+      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))
+    );
 
-    const updatedGoal = await db
-      .update(savingsGoals)
-      .set(encryptedUpdates)
-      .where(and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId)))
-      .returning();
-
-    return updatedGoal[0]
-      ? decryptAfterFetch("savingsGoals", updatedGoal[0])
-      : null;
+    // Return the updated goal by fetching it
+    return await getSavingsGoalById(id, userId);
   } catch (error) {
     console.error("[savingsGoals] Error updating savings goal:", error);
     throw new Error("Failed to update savings goal");
@@ -121,12 +84,15 @@ export async function updateSavingsGoal(
 
 export async function deleteSavingsGoal(id: number, userId: string) {
   try {
-    const deletedGoal = await db
-      .delete(savingsGoals)
-      .where(and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId)))
-      .returning();
+    // Get the goal before deleting for return value
+    const goal = await getSavingsGoalById(id, userId);
+    
+    await deleteEncrypted(
+      savingsGoals,
+      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))
+    );
 
-    return deletedGoal[0] || null;
+    return goal;
   } catch (error) {
     console.error("[savingsGoals] Error deleting savings goal:", error);
     throw new Error("Failed to delete savings goal");
@@ -139,15 +105,15 @@ export async function updateSavingsGoalCurrentAmount(
   currentAmount: number
 ) {
   try {
-    const updatedGoal = await db
-      .update(savingsGoals)
-      .set({ currentAmount })
-      .where(and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId)))
-      .returning();
+    await updateEncrypted(
+      savingsGoals,
+      "savingsGoals",
+      { currentAmount },
+      and(eq(savingsGoals.id, id), eq(savingsGoals.userId, userId))
+    );
 
-    return updatedGoal[0]
-      ? decryptAfterFetch("savingsGoals", updatedGoal[0])
-      : null;
+    // Return the updated goal by fetching it
+    return await getSavingsGoalById(id, userId);
   } catch (error) {
     console.error("[savingsGoals] Error updating savings goal amount:", error);
     throw new Error("Failed to update savings goal amount");
