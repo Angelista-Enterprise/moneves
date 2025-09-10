@@ -14,8 +14,6 @@
  * Usage: npx tsx scripts/seed-database.ts
  */
 
-import { drizzle } from "drizzle-orm/libsql";
-import { createClient } from "@libsql/client";
 import { sql } from "drizzle-orm";
 import {
   users,
@@ -31,6 +29,7 @@ import {
 } from "../src/lib/db/schema";
 import { DatabaseEncryptionService } from "../src/lib/encryption/service";
 import bcrypt from "bcryptjs";
+import { db } from "../src/lib/db";
 
 // Test user ID - consistent across all data
 const TEST_USER_ID = "test-user-12345";
@@ -49,41 +48,9 @@ const randomBool = () => Math.random() > 0.5;
 async function seedDatabase() {
   console.log("🌱 Starting database seeding...");
 
-  // Create database connection based on environment
-  const createDatabaseClient = () => {
-    const databaseUrl = process.env.DATABASE_URL;
-
-    if (databaseUrl) {
-      // Production: Use Turso (libSQL)
-      console.log("🔗 Connecting to production database (Turso)");
-      return createClient({
-        url: databaseUrl,
-        authToken: process.env.DATABASE_AUTH_TOKEN,
-      });
-    } else {
-      // Development: Use local SQLite with libSQL
-      console.log("🔗 Connecting to local SQLite database");
-      return createClient({
-        url: "file:sqlite.db",
-      });
-    }
-  };
-
-  const client = createDatabaseClient();
-  const db = drizzle(client, {
-    schema: {
-      users,
-      userAccounts,
-      budgetCategories,
-      transactions,
-      savingsGoals,
-      transactionCategories,
-      accountMappings,
-      transactionCategorizations,
-      budgetAchievements,
-      budgetInsights,
-    },
-  });
+  // Use the existing database connection from the main app
+  // This ensures proper environment variable handling
+  console.log("🔗 Using existing database connection");
 
   // Test database connection
   try {
