@@ -49,10 +49,27 @@ const randomBool = () => Math.random() > 0.5;
 async function seedDatabase() {
   console.log("🌱 Starting database seeding...");
 
-  // Create database connection
-  const client = createClient({
-    url: "file:sqlite.db",
-  });
+  // Create database connection based on environment
+  const createDatabaseClient = () => {
+    const databaseUrl = process.env.DATABASE_URL;
+
+    if (databaseUrl) {
+      // Production: Use Turso (libSQL)
+      console.log("🔗 Connecting to production database (Turso)");
+      return createClient({
+        url: databaseUrl,
+        authToken: process.env.DATABASE_AUTH_TOKEN,
+      });
+    } else {
+      // Development: Use local SQLite with libSQL
+      console.log("🔗 Connecting to local SQLite database");
+      return createClient({
+        url: "file:sqlite.db",
+      });
+    }
+  };
+
+  const client = createDatabaseClient();
   const db = drizzle(client, {
     schema: {
       users,
@@ -67,6 +84,15 @@ async function seedDatabase() {
       budgetInsights,
     },
   });
+
+  // Test database connection
+  try {
+    await db.execute(sql`SELECT 1`);
+    console.log("✅ Database connection successful");
+  } catch (error) {
+    console.error("❌ Database connection failed:", error);
+    throw error;
+  }
 
   try {
     // Clear existing test data
