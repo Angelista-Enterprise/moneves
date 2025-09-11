@@ -11,6 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Target, Plus } from "lucide-react";
 import { useFormatting } from "@/contexts/FormattingContext";
+import { useHelpHover } from "@/contexts/HelpHoverContext";
 
 interface BudgetCategoriesProps {
   items: BudgetItem[];
@@ -29,6 +30,7 @@ export const BudgetCategories = ({
   const displayItems = items.slice(0, maxItems);
 
   const { formatCurrency } = useFormatting();
+  const { isHelpHovered, isHelpToggled } = useHelpHover();
 
   const handleViewAll = () => {
     router.push("/reports");
@@ -136,6 +138,45 @@ export const BudgetCategories = ({
                       <p className="text-xs text-gray-500 transition-colors duration-300 group-hover:text-gray-400">
                         {item.description}
                       </p>
+
+                      {/* Help info - shows when help is hovered */}
+                      <div
+                        className={`mt-2 transition-all duration-300 ease-in-out overflow-hidden ${
+                          isHelpHovered || isHelpToggled
+                            ? "max-h-20 opacity-100 transform translate-y-0"
+                            : "max-h-0 opacity-0 transform -translate-y-2"
+                        }`}
+                      >
+                        <div className="p-2 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-blue-300">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`w-2 h-2 bg-blue-400 rounded-full transition-all duration-300 ${
+                                  isHelpHovered || isHelpToggled
+                                    ? "scale-100"
+                                    : "scale-0"
+                                }`}
+                              ></div>
+                              <span className="font-semibold text-blue-200">
+                                🎯 Budget Tracking
+                              </span>
+                            </div>
+                            <div className="text-blue-300/80 pl-4">
+                              <div>
+                                • <strong>Progress:</strong>{" "}
+                                {item.progress.toFixed(1)}% of{" "}
+                                {formatCurrency(item.amount)} limit
+                                <br />• <strong>Status:</strong>{" "}
+                                {item.progress >= 100
+                                  ? "🔴 Over budget"
+                                  : item.progress >= 80
+                                    ? "🟡 Warning"
+                                    : "🟢 On track"}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 

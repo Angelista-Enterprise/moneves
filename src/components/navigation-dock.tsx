@@ -15,6 +15,7 @@ import {
   LogOut,
   HelpCircle,
 } from "lucide-react";
+import { useHelpHover } from "@/contexts/HelpHoverContext";
 
 const navigationItems = [
   {
@@ -59,6 +60,8 @@ export function NavigationDock() {
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  const { setHelpHovered, isHelpHovered, setHelpToggled, isHelpToggled } =
+    useHelpHover();
 
   useEffect(() => {
     setMounted(true);
@@ -74,6 +77,26 @@ export function NavigationDock() {
 
   const handleSupportClick = () => {
     router.push("/support");
+  };
+
+  const handleHelpMouseEnter = () => {
+    if (pathname === "/") {
+      setHelpHovered(true);
+    }
+  };
+
+  const handleHelpMouseLeave = () => {
+    setHelpHovered(false);
+  };
+
+  const handleHelpClick = () => {
+    if (pathname === "/") {
+      // Toggle help on/off
+      setHelpToggled(!isHelpToggled);
+    } else {
+      // Navigate to support page for other pages
+      handleSupportClick();
+    }
   };
 
   if (!mounted) return null;
@@ -115,11 +138,14 @@ export function NavigationDock() {
 
             {/* Support Button */}
             <div className="pt-2 border-t border-gray-200/50 dark:border-slate-700/50">
-              <div onClick={handleSupportClick} className="group relative">
-                <div className="w-12 h-12 rounded-xl aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer bg-blue-100/80 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/40 hover:scale-105">
+              <div className="relative">
+                <div
+                  onClick={handleSupportClick}
+                  className="w-12 h-12 rounded-xl aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer group bg-blue-100/80 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/40 hover:scale-105"
+                >
                   <HelpCircle size={22} />
                 </div>
-                <div className="absolute left-16 top-1/2 transform -translate-y-1/2 bg-gray-900/90 dark:bg-gray-800/90 backdrop-blur-sm text-white text-sm font-medium px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                <div className="absolute left-16 top-1/2 transform -translate-y-1/2 bg-gray-900/90 dark:bg-gray-800/90 backdrop-blur-sm text-white text-sm font-medium px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
                   Support & Bug Reports
                 </div>
               </div>
@@ -140,13 +166,29 @@ export function NavigationDock() {
             {/* Subtle branding */}
             <div className="pt-2 border-t border-gray-200/50 dark:border-slate-700/50">
               <div className="flex justify-center">
-                <Image
-                  src="/brand/claru-icon.svg"
-                  alt="Claru"
-                  width={24}
-                  height={24}
-                  className="opacity-60 hover:opacity-100 transition-opacity duration-200"
-                />
+                <div
+                  onClick={handleHelpClick}
+                  onMouseEnter={handleHelpMouseEnter}
+                  onMouseLeave={handleHelpMouseLeave}
+                  className="group relative cursor-pointer p-2 rounded-lg transition-all duration-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+                >
+                  <Image
+                    src="/brand/claru-icon.svg"
+                    alt="Claru"
+                    width={24}
+                    height={24}
+                    className={`transition-all duration-300 ${
+                      (isHelpHovered || isHelpToggled) && pathname === "/"
+                        ? "opacity-100 scale-110"
+                        : "opacity-60 hover:opacity-100"
+                    }`}
+                  />
+                  <div className="absolute left-16 top-1/2 transform -translate-y-1/2 bg-gray-900/90 dark:bg-gray-800/90 backdrop-blur-sm text-white text-sm font-medium px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+                    {pathname === "/"
+                      ? "Help & Guide"
+                      : "Support & Bug Reports"}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -188,11 +230,14 @@ export function NavigationDock() {
 
             {/* Support Button for Mobile */}
             <div className="pl-2 border-l border-gray-200/50 dark:border-slate-700/50">
-              <div onClick={handleSupportClick} className="group relative">
-                <div className="w-10 h-10 rounded-xl aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer bg-blue-100/80 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/40 hover:scale-105">
+              <div className="relative">
+                <div
+                  onClick={handleSupportClick}
+                  className="w-10 h-10 rounded-xl aspect-square flex items-center justify-center transition-all duration-300 cursor-pointer group bg-blue-100/80 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/40 hover:scale-105"
+                >
                   <HelpCircle size={18} />
                 </div>
-                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-gray-900/90 dark:bg-gray-800/90 backdrop-blur-sm text-white text-xs font-medium px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-gray-900/90 dark:bg-gray-800/90 backdrop-blur-sm text-white text-xs font-medium px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
                   Support
                 </div>
               </div>
@@ -212,14 +257,26 @@ export function NavigationDock() {
 
             {/* Subtle branding for Mobile */}
             <div className="pl-2 border-l border-gray-200/50 dark:border-slate-700/50">
-              <div className="w-10 h-10 rounded-xl aspect-square flex items-center justify-center">
+              <div
+                onClick={handleHelpClick}
+                onMouseEnter={handleHelpMouseEnter}
+                onMouseLeave={handleHelpMouseLeave}
+                className="w-10 h-10 rounded-xl aspect-square flex items-center justify-center group relative cursor-pointer transition-all duration-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50"
+              >
                 <Image
                   src="/brand/claru-icon.svg"
                   alt="Claru"
                   width={20}
                   height={20}
-                  className="opacity-60 hover:opacity-100 transition-opacity duration-200"
+                  className={`transition-all duration-300 ${
+                    (isHelpHovered || isHelpToggled) && pathname === "/"
+                      ? "opacity-100 scale-110"
+                      : "opacity-60 hover:opacity-100"
+                  }`}
                 />
+                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-gray-900/90 dark:bg-gray-800/90 backdrop-blur-sm text-white text-xs font-medium px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+                  {pathname === "/" ? "Help" : "Support"}
+                </div>
               </div>
             </div>
           </div>

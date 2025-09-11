@@ -8,6 +8,7 @@ import {
   StaggeredContainer,
 } from "@/components/ui";
 import { useFormatting } from "@/contexts/FormattingContext";
+import { useHelpHover } from "@/contexts/HelpHoverContext";
 
 interface FinancialOverviewProps {
   items: FinancialOverviewItem[];
@@ -21,6 +22,7 @@ export const FinancialOverview = ({
   isLoading = false,
 }: FinancialOverviewProps) => {
   const { formatCurrency, formatPercentage } = useFormatting();
+  const { isHelpHovered, isHelpToggled } = useHelpHover();
 
   return (
     <AnimationWrapper animation="fadeIn" delay={100}>
@@ -94,6 +96,78 @@ export const FinancialOverview = ({
                       <p className="text-xs text-gray-500 transition-colors duration-300 group-hover:text-gray-400">
                         {item.description}
                       </p>
+
+                      {/* Help info - shows when help is hovered */}
+                      <div
+                        className={`mt-2 transition-all duration-300 ease-in-out overflow-hidden ${
+                          isHelpHovered || isHelpToggled
+                            ? "max-h-20 opacity-100 transform translate-y-0"
+                            : "max-h-0 opacity-0 transform -translate-y-2"
+                        }`}
+                      >
+                        <div className="p-2 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-blue-300">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`w-2 h-2 bg-blue-400 rounded-full transition-all duration-300 ${
+                                  isHelpHovered || isHelpToggled
+                                    ? "scale-100"
+                                    : "scale-0"
+                                }`}
+                              ></div>
+                              <span className="font-semibold text-blue-200">
+                                {item.title === "Total Balance"
+                                  ? "💰 Account Balance"
+                                  : item.title === "Monthly Income"
+                                    ? "📈 Income Tracking"
+                                    : item.title === "Monthly Expenses"
+                                      ? "📉 Expense Monitoring"
+                                      : "🎯 Savings Analysis"}
+                              </span>
+                            </div>
+                            <div className="text-blue-300/80 pl-4">
+                              {item.title === "Total Balance" && (
+                                <div>
+                                  Real-time balance from Bunq accounts + manual
+                                  entries. Updates every 5 minutes.
+                                </div>
+                              )}
+                              {item.title === "Monthly Income" && (
+                                <div>
+                                  • <strong>Source:</strong> Categorized income
+                                  transactions
+                                  <br />• <strong>Change:</strong>{" "}
+                                  {item.change > 0 ? "Up" : "Down"}{" "}
+                                  {Math.abs(item.change)}% vs last month
+                                </div>
+                              )}
+                              {item.title === "Monthly Expenses" && (
+                                <div>
+                                  • <strong>Source:</strong> All expense
+                                  transactions
+                                  <br />• <strong>Trend:</strong>{" "}
+                                  {item.change > 0
+                                    ? "Spending up"
+                                    : "Spending down"}{" "}
+                                  {Math.abs(item.change)}%
+                                </div>
+                              )}
+                              {item.title === "Savings Rate" && (
+                                <div>
+                                  • <strong>Formula:</strong> (Income -
+                                  Expenses) ÷ Income × 100
+                                  <br />• <strong>Status:</strong>{" "}
+                                  {item.amount >= 20
+                                    ? "🎉 Excellent"
+                                    : item.amount >= 10
+                                      ? "👍 Good"
+                                      : "⚠️ Needs improvement"}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 

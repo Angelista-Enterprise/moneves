@@ -21,7 +21,6 @@ import {
 import { Button, PageHeader } from "@/components/ui";
 import { AddTransactionForm } from "@/components/transactions";
 import { DollarSign, Plus } from "lucide-react";
-import Image from "next/image";
 
 // Dashboard Content Component (uses useSearchParams)
 const DashboardContent = () => {
@@ -223,20 +222,6 @@ const DashboardContent = () => {
           showBalance={showBalance}
           isLoading={isLoading}
         />
-
-        {/* Subtle branding footer */}
-        <div className="mt-12 pt-8 border-t border-gray-800">
-          <div className="flex items-center justify-center gap-2 text-gray-500 text-sm">
-            <span>Powered by</span>
-            <Image
-              src="/brand/claru-wordmark.svg"
-              alt="Claru"
-              width={80}
-              height={20}
-              className="h-5"
-            />
-          </div>
-        </div>
       </div>
 
       {/* Navigation */}

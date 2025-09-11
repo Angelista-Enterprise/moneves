@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { queryClient } from "@/lib/query-client";
 import { SessionProvider } from "next-auth/react";
 import { FormattingProvider } from "@/contexts/FormattingContext";
+import { HelpHoverProvider } from "@/contexts/HelpHoverContext";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -16,15 +17,17 @@ export function Providers({ children }: ProvidersProps) {
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
         <FormattingProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem={false}
-            disableTransitionOnChange
-            storageKey="moneves-theme"
-          >
-            {children}
-          </ThemeProvider>
+          <HelpHoverProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem={false}
+              disableTransitionOnChange
+              storageKey="moneves-theme"
+            >
+              {children}
+            </ThemeProvider>
+          </HelpHoverProvider>
         </FormattingProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </SessionProvider>

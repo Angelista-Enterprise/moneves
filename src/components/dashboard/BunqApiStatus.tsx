@@ -20,6 +20,7 @@ import { useBunqApiTest } from "@/lib/bunq-api-test";
 import { useNotifications } from "@/lib/notification-manager";
 import { useUserSettings } from "@/hooks/useUserSettings";
 import { useSession } from "next-auth/react";
+import { useHelpHover } from "@/contexts/HelpHoverContext";
 
 const BunqApiStatus: React.FC = () => {
   const { data: session } = useSession();
@@ -29,6 +30,7 @@ const BunqApiStatus: React.FC = () => {
   const { testConnection, getStatus, resetApiErrors } = useBunqApiTest();
   const { getBunqApiStatus } = useNotifications();
   const { settings } = useUserSettings(userId || "");
+  const { isHelpHovered, isHelpToggled } = useHelpHover();
 
   const apiStatus = getBunqApiStatus();
   const bunqStatus = getStatus();
@@ -267,6 +269,39 @@ const BunqApiStatus: React.FC = () => {
               <ExternalLink className="w-4 h-4 mr-2" />
               Settings
             </Button>
+          </div>
+
+          {/* Help info - shows when help is hovered */}
+          <div
+            className={`mt-3 transition-all duration-300 ease-in-out overflow-hidden ${
+              isHelpHovered || isHelpToggled
+                ? "max-h-20 opacity-100 transform translate-y-0"
+                : "max-h-0 opacity-0 transform -translate-y-2"
+            }`}
+          >
+            <div className="p-2 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-blue-300">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`w-2 h-2 bg-blue-400 rounded-full transition-all duration-300 ${
+                      isHelpHovered || isHelpToggled ? "scale-100" : "scale-0"
+                    }`}
+                  ></div>
+                  <span className="font-semibold text-blue-200">
+                    🔌 API Connection Status
+                  </span>
+                </div>
+                <div className="text-blue-300/80 pl-4">
+                  <div>
+                    • <strong>Status:</strong> {getStatusText()} •{" "}
+                    <strong>Response:</strong> {bunqStatus.responseTime}ms
+                    <br />• <strong>Quality:</strong>{" "}
+                    {getConnectionQuality()?.label || "Unknown"} •{" "}
+                    <strong>Errors:</strong> {apiStatus.errorCount}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>
